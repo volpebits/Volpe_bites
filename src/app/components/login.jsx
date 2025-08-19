@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Eye, EyeOff, X, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, X, ArrowLeft, Camera, Wand2, Loader2 } from 'lucide-react';
 
 // Seu Google Client ID
 const GOOGLE_CLIENT_ID = "306605130597-nkfa413h7gsk17nhja0rc7dvnqp95fqs.apps.googleusercontent.com";
@@ -14,6 +14,9 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
     const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
     const [isRecaptchaLoaded, setIsRecaptchaLoaded] = useState(false);
     const [recaptchaToken, setRecaptchaToken] = useState(null);
+
+    const [previewImage, setPreviewImage] = useState(null);
+    const [isGeneratingAI, setIsGeneratingAI] = useState(false);
 
     const isLogin = authMode === 'login';
     const isRegister = authMode === 'register';
@@ -152,7 +155,26 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         }
     }, [isRecaptchaLoaded, isRegister, isOpen]);
 
-    // CORREÇÃO 3: Função simplificada para login com Google
+    // Função para gerar avatar com IA (simulada)
+    const generateAIAvatar = async (type = 'dicebear') => {
+        setIsGeneratingAI(true);
+        
+        // Simulação de chamada para IA (substitua pela sua implementação)
+        setTimeout(() => {
+            // Usando uma imagem placeholder para demonstração
+            const aiAvatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`;
+            setPreviewImage(aiAvatarUrl);
+            setIsGeneratingAI(false);
+        }, 2000);
+    };
+
+    const openReadyPlayerMe = () => {
+        // Abrir Ready Player Me em nova aba
+        const readyPlayerUrl = 'https://demo.readyplayer.me/avatar?frameApi';
+        window.open(readyPlayerUrl, '_blank', 'width=400,height=600');
+    };
+
+    // Função simplificada para login com Google
     const handleGoogleLogin = () => {
         if (window.google && window.google.accounts && isGoogleLoaded) {
             try {
@@ -167,11 +189,10 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                     theme: 'outline',
                     size: 'large',
                     width: '300',
-                    // CORREÇÃO 4: Configurações específicas para evitar FedCM
                     type: 'standard',
                     shape: 'rectangular',
                     logo_alignment: 'left',
-                    ux_mode: 'popup' // Força popup
+                    ux_mode: 'popup'
                 });
 
                 // Simular clique no botão
@@ -209,7 +230,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         // Aqui você processaria o formulário
         console.log('Formulário enviado:', {
             mode: authMode,
-            recaptchaToken: recaptchaToken
+            recaptchaToken: recaptchaToken,
+            previewImage: previewImage
         });
         
         alert(`${authMode === 'login' ? 'Login' : authMode === 'register' ? 'Cadastro' : 'Recuperação'} realizado com sucesso!`);
@@ -301,14 +323,60 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
 
                     {/* Formulário */}
                     <div className="w-full max-w-md mx-auto mt-10 space-y-10 animate-fade-in">
-                        <form className="space-y-6" onSubmit={handleSubmit}>
-                            {/* Campo Nome - apenas no registro */}
+                        <div className="space-y-6">{/* Form simulation */}
+                            {/* Seção de Perfil - apenas no registro */}
+                            {isRegister && (
+                                <div className="text-center space-y-4">
+                                    {/* Avatar */}
+                                    <div className="relative inline-block">
+                                        <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 mx-auto border-4 border-green-500">
+                                            {previewImage ? (
+                                                <img
+                                                    src={previewImage}
+                                                    alt="Preview"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Criação de avatares */}
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <button
+                                            type="button"
+                                            onClick={openReadyPlayerMe}
+                                            className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+                                        >
+                                            <Camera size={16} />
+                                            3D Avatar
+                                        </button>
+                                        
+                                        <button
+                                            type="button"
+                                            onClick={() => generateAIAvatar('dicebear')}
+                                            disabled={isGeneratingAI}
+                                            className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-500 hover:bg-purple-600 disabled:bg-purple-300 text-white rounded-lg text-sm transition-colors"
+                                        >
+                                            {isGeneratingAI ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+                                            IA Random
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Campo Usuário - apenas no registro */}
                             {isRegister && (
                                 <div>
-                                    <label className="block text-sm text-gray-600 dark:text-white mb-1">Nome</label>
+                                    <label className="block text-sm text-gray-600 dark:text-white mb-1">Usuário</label>
                                     <input
                                         type="text"
-                                        placeholder="Seu nome"
+                                        placeholder="Seu usuário"
                                         className="w-full border border-gray-300 text-black px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
                                     />
                                 </div>
@@ -394,7 +462,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
 
                             {/* Botão principal */}
                             <button
-                                type="submit"
+                                onClick={handleSubmit}
                                 className="w-full bg-gradient-to-r from-green-400 to-green-700 text-white py-4 rounded-full mt-4 transition-all duration-300 hover:scale-105 hover:shadow-md"
                             >
                                 {getButtonText()}
@@ -404,8 +472,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                             {!isForgotPassword && (
                                 <div className="relative flex items-center justify-center">
                                     <div className="border-t border-gray-300 w-full"></div>
-                                    <span className="  px-4 text--500 text-sm">OU</span>
-                                    <div className="border-t border-gray-300  w-full"></div>
+                                    <span className="px-4 text-gray-500 text-sm">OU</span>
+                                    <div className="border-t border-gray-300 w-full"></div>
                                 </div>
                             )}
 
@@ -467,10 +535,10 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                     </p>
                                 </div>
                             )}
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </>
     );
-}  
+}
