@@ -1,22 +1,111 @@
 "use client";
 
 import React, { useState } from 'react';
-import { User, Edit3, Camera, Trophy, Gamepad2, Clock, Calendar, X, Eye, EyeOff, Loader2, Wand2 } from 'lucide-react';
+import { User, Edit3, Camera, Trophy, Gamepad2, Clock, Calendar, X, Eye, EyeOff, Loader2, Wand2, RefreshCw } from 'lucide-react';
 
 const UserProfilePage = () => {
+    // Dados para geração de missões aleatórias
+    const missionTemplates = [
+        // Missões de Jogo
+        { type: 'play', title: 'Maratonista', description: 'Jogue por {time} consecutivas', icons: ['⏰', '🎮', '⚡'], xpRange: [20, 60], timeValues: ['1 hora', '2 horas', '3 horas'] },
+        { type: 'games', title: 'Explorador', description: 'Complete {count} jogos diferentes', icons: ['🗺️', '🎯', '🌟'], xpRange: [30, 80], countValues: [2, 3, 4, 5] },
+        { type: 'genre', title: 'Especialista', description: 'Jogue 3 jogos de {genre}', icons: ['🎭', '⚔️', '🏎️'], xpRange: [25, 55], genres: ['RPG', 'Aventura', 'Corrida', 'Estratégia', 'Indie'] },
+
+        // Missões Sociais
+        { type: 'social', title: 'Avaliador', description: 'Avalie {count} jogos', icons: ['⭐', '📝', '👍'], xpRange: [15, 45], countValues: [2, 3, 4] },
+        { type: 'social', title: 'Compartilhador', description: 'Compartilhe {count} jogos com amigos', icons: ['📤', '🤝', '💫'], xpRange: [20, 40], countValues: [1, 2, 3] },
+        { type: 'social', title: 'Crítico', description: 'Escreva uma review de {count} jogos', icons: ['✍️', '📖', '🎬'], xpRange: [25, 60], countValues: [1, 2] },
+
+        // Missões de Conquistas
+        { type: 'achievement', title: 'Colecionador', description: 'Desbloqueie {count} conquistas', icons: ['🏆', '💎', '🎗️'], xpRange: [30, 70], countValues: [2, 3, 4, 5] },
+        { type: 'achievement', title: 'Perfeccionista', description: 'Complete um jogo 100%', icons: ['💯', '👑', '✨'], xpRange: [50, 100], countValues: [1] },
+        { type: 'achievement', title: 'Speedrunner', description: 'Complete um jogo em menos de {time}', icons: ['🏃', '⚡', '🕐'], xpRange: [40, 80], timeValues: ['1 hora', '30 minutos', '2 horas'] },
+
+        // Missões de Descoberta
+        { type: 'discovery', title: 'Descobridor', description: 'Encontre {count} jogos ocultos', icons: ['🔍', '🗝️', '🎁'], xpRange: [35, 65], countValues: [1, 2, 3] },
+        { type: 'discovery', title: 'Beta Tester', description: 'Teste {count} jogos em desenvolvimento', icons: ['🧪', '⚗️', '🔬'], xpRange: [45, 85], countValues: [1, 2] },
+
+        // Missões Especiais
+        { type: 'special', title: 'Nostálgico', description: 'Jogue um jogo clássico brasileiro', icons: ['🎖️', '📼', '🕹️'], xpRange: [40, 70], countValues: [1] },
+        { type: 'special', title: 'Patriota', description: 'Complete {count} jogos nacionais', icons: ['🇧🇷', '🎊', '🏆'], xpRange: [30, 80], countValues: [2, 3, 4] },
+        { type: 'special', title: 'Madrugador', description: 'Jogue entre 00:00 e 06:00', icons: ['🌙', '⭐', '🦉'], xpRange: [25, 55], countValues: [1] }
+    ];
+
+    const gemColors = [
+        "from-yellow-400 to-orange-500",
+        "from-purple-400 to-pink-500",
+        "from-blue-400 to-cyan-500",
+        "from-green-400 to-emerald-500",
+        "from-red-400 to-rose-500",
+        "from-indigo-400 to-purple-500"
+    ];
+
     // Estados para os dados do perfil
     const [profileData, setProfileData] = useState({
         name: 'Robson',
         about: 'Gamer apaixonado por jogos nacionais! 🎮🇧🇷',
         email: 'robson@email.com',
         password: '123456789',
-        avatar: null
+        avatar: null,
+        level: 30,
+        currentXP: 50,
+        maxXP: 100
     });
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState('overview'); // Estado faltando
+    const [activeTab, setActiveTab] = useState('overview');
     const [showPassword, setShowPassword] = useState(false);
     const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+
+    // Estados para missões
+    const [dailyMissions, setDailyMissions] = useState([
+        {
+            id: 1,
+            title: "Sweet Music",
+            description: 'Give "Sweet Music" sticker to a studio',
+            xpReward: 25,
+            gemColor: "from-yellow-400 to-orange-500",
+            icon: "🎵",
+            completed: false
+        },
+        {
+            id: 2,
+            title: "Explorer Badge",
+            description: "Complete 3 different games today",
+            xpReward: 50,
+            gemColor: "from-yellow-400 to-orange-500",
+            icon: "🏆",
+            completed: false
+        },
+        {
+            id: 3,
+            title: "Time Master",
+            description: "Play for 2 hours straight",
+            xpReward: 35,
+            gemColor: "from-yellow-400 to-orange-500",
+            icon: "⏰",
+            completed: false
+        }
+    ]);
+
+    const [completedMissions, setCompletedMissions] = useState([
+        {
+            id: 101,
+            title: "Primeiro Jogo",
+            description: "Jogou seu primeiro jogo nacional",
+            xpReward: 20,
+            completedAt: "Hoje",
+            icon: "🎯"
+        },
+        {
+            id: 102,
+            title: "Explorador",
+            description: "Jogou 5 jogos diferentes",
+            xpReward: 40,
+            completedAt: "Ontem",
+            icon: "🗺️"
+        }
+    ]);
 
     // Estado temporário para edição
     const [tempProfileData, setTempProfileData] = useState({
@@ -26,6 +115,94 @@ const UserProfilePage = () => {
         password: profileData.password || '',
         avatar: profileData.avatar || '',
     });
+
+    // Função para gerar missão aleatória
+    const generateRandomMission = () => {
+        const template = missionTemplates[Math.floor(Math.random() * missionTemplates.length)];
+        const gemColor = gemColors[Math.floor(Math.random() * gemColors.length)];
+        const icon = template.icons[Math.floor(Math.random() * template.icons.length)];
+        const xpReward = Math.floor(Math.random() * (template.xpRange[1] - template.xpRange[0] + 1)) + template.xpRange[0];
+
+        let description = template.description;
+
+        // Substituir placeholders na descrição
+        if (template.countValues && description.includes('{count}')) {
+            const count = template.countValues[Math.floor(Math.random() * template.countValues.length)];
+            description = description.replace('{count}', count);
+        }
+
+        if (template.timeValues && description.includes('{time}')) {
+            const time = template.timeValues[Math.floor(Math.random() * template.timeValues.length)];
+            description = description.replace('{time}', time);
+        }
+
+        if (template.genres && description.includes('{genre}')) {
+            const genre = template.genres[Math.floor(Math.random() * template.genres.length)];
+            description = description.replace('{genre}', genre);
+        }
+
+        return {
+            id: Date.now() + Math.floor(Math.random() * 1000),
+            title: template.title,
+            description: description,
+            xpReward: xpReward,
+            gemColor: gemColor,
+            icon: icon,
+            type: template.type,
+            completed: false
+        };
+    };
+
+
+
+    // Função para regenerar todas as missões
+    const regenerateAllMissions = () => {
+        const newMissions = [];
+        const missionCount = Math.floor(Math.random() * 4) + 3; // 3 a 6 missões
+
+        for (let i = 0; i < missionCount; i++) {
+            newMissions.push(generateRandomMission());
+        }
+
+        setDailyMissions(newMissions);
+    };
+
+    // Função para completar missão
+    const completeMission = (missionId) => {
+        const mission = dailyMissions.find(m => m.id === missionId);
+        if (!mission || mission.completed) return;
+
+        // Adicionar XP
+        const newXP = profileData.currentXP + mission.xpReward;
+        let newLevel = profileData.level;
+        let finalXP = newXP;
+
+        // Verificar se subiu de nível
+        if (newXP >= profileData.maxXP) {
+            newLevel += 1;
+            finalXP = newXP - profileData.maxXP;
+        }
+
+        // Atualizar profile
+        setProfileData({
+            ...profileData,
+            level: newLevel,
+            currentXP: finalXP,
+            maxXP: 100 // Pode aumentar baseado no nível
+        });
+
+        // Mover missão para concluídas
+        const completedMission = {
+            ...mission,
+            id: Date.now(), // novo ID para concluídas
+            completedAt: "Agora mesmo"
+        };
+
+        setCompletedMissions([completedMission, ...completedMissions]);
+
+        // Remover das missões diárias
+        setDailyMissions(dailyMissions.filter(m => m.id !== missionId));
+    };
 
     const handleEditProfile = () => {
         setTempProfileData({ ...profileData });
@@ -42,37 +219,60 @@ const UserProfilePage = () => {
         setIsEditModalOpen(false);
     };
 
-    const handleAvatarChange = (event) => {
-        // Função removida - não é mais necessária
-    };
-
-    const generateAIAvatar = async (provider) => {
+    // Função para gerar avatar com IA (simulada)
+    const generateAIAvatar = async (type = 'dicebear') => {
         setIsGeneratingAI(true);
-        try {
-            // Gera um avatar aleatório usando DiceBear API
-            const styles = ['adventurer', 'avataaars', 'big-ears', 'big-smile', 'croodles', 'fun-emoji', 'icons', 'identicon', 'initials', 'lorelei', 'micah', 'miniavs', 'open-peeps', 'personas', 'pixel-art'];
-            const randomStyle = styles[Math.floor(Math.random() * styles.length)];
-            const randomSeed = Math.random().toString(36).substring(7);
 
-            const avatarUrl = `https://api.dicebear.com/7.x/${randomStyle}/svg?seed=${randomSeed}&size=200`;
-
-            // Simula um pequeno delay para mostrar o loading
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            setTempProfileData({ ...tempProfileData, avatar: avatarUrl });
-        } catch (error) {
-            console.error('Erro ao gerar avatar:', error);
-            alert('Erro ao gerar avatar. Tente novamente.');
-        } finally {
+        // Simulação de chamada para IA (substitua pela sua implementação)
+        setTimeout(() => {
+            // Usando uma imagem placeholder para demonstração
+            const aiAvatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`;
+            setTempProfileData({ ...tempProfileData, avatar: aiAvatarUrl });
             setIsGeneratingAI(false);
-        }
+        }, 2000);
     };
 
     const openReadyPlayerMe = () => {
-        // Simula a criação de um avatar 3D personalizado
-        const avatar3DUrl = `https://api.dicebear.com/7.x/avataaars-neutral/svg?seed=${Date.now()}&backgroundColor=b6e3f4,c0aede,d1d4f9&size=200`;
-        setTempProfileData({ ...tempProfileData, avatar: avatar3DUrl });
-        alert("Avatar 3D criado com sucesso!");
+        // Abrir Ready Player Me em nova aba
+        const readyPlayerUrl = 'https://demo.readyplayer.me/avatar?frameApi';
+        const popup = window.open(readyPlayerUrl, 'readyplayerme', 'width=400,height=600');
+
+        // Escutar mensagens da janela popup
+        const handleMessage = (event) => {
+            // Verificar se a mensagem vem do Ready Player Me
+            if (event.origin !== 'https://demo.readyplayer.me') return;
+
+            // Verificar se é o evento de avatar criado
+            if (event.data?.eventName === 'v1.avatar.exported') {
+                const avatarUrl = event.data.url;
+                console.log('Avatar criado:', avatarUrl);
+
+                // Aplicar o avatar ao perfil
+                setTempProfileData({ ...tempProfileData, avatar: avatarUrl });
+
+                // Fechar o popup
+                if (popup) {
+                    popup.close();
+                }
+
+                // Remover o listener
+                window.removeEventListener('message', handleMessage);
+
+                // Notificar sucesso
+                alert('Avatar 3D criado com sucesso!');
+            }
+        };
+
+        // Adicionar listener para mensagens
+        window.addEventListener('message', handleMessage);
+
+        // Limpar listener se o popup for fechado manualmente
+        const checkClosed = setInterval(() => {
+            if (popup.closed) {
+                window.removeEventListener('message', handleMessage);
+                clearInterval(checkClosed);
+            }
+        }, 1000);
     };
 
     return (
@@ -126,11 +326,12 @@ const UserProfilePage = () => {
                 {/* Stats Cards */}
                 <div className="grid grid-cols-4 gap-6 mb-8">
                     <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80">
-                        <div className="text-3xl font-bold text-green-400 mb-1">Nível 30:</div>
-                        <div className="text-black dark:text-white font-bold mb-3">XP: 3050</div>
+                        <div className="text-3xl font-bold text-green-400 mb-1">Nível {profileData.level}:</div>
+                        <div className="text-black dark:text-white font-bold mb-3">XP: {profileData.currentXP + (profileData.level * 100)}</div>
                         <div className="w-full bg-gray-700 rounded-full h-3">
-                            <div className="bg-green-500 h-3 rounded-full" style={{ width: '50%' }}></div>
+                            <div className="bg-green-500 h-3 rounded-full" style={{ width: `${(profileData.currentXP / profileData.maxXP) * 100}%` }}></div>
                         </div>
+                        <div className="text-xs text-gray-300 mt-1">{profileData.currentXP}/{profileData.maxXP} XP</div>
                     </div>
 
                     <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80 text-center">
@@ -220,10 +421,6 @@ const UserProfilePage = () => {
                         {activeTab === 'overview' && (
                             <div className="space-y-6">
                                 <div>
-                                    <h3 className="text-2xl font-bold text-black dark:text-white mb-3">Sobre</h3>
-                                    <p className="text-black dark:text-white">{profileData.about}</p>
-                                </div>
-                                <div>
                                     <h3 className="text-2xl font-bold text-black dark:text-white mb-3">Gêneros Favoritos</h3>
                                     <div className="flex flex-wrap gap-2">
                                         {["RPG", "Aventura", "Indie"].map((genre, idx) => (
@@ -240,20 +437,22 @@ const UserProfilePage = () => {
                             <div>
                                 <h3 className="text-2xl font-bold text-black dark:text-white mb-6">Missões Concluídas</h3>
                                 <div className="space-y-4">
-                                    <div className="flex items-center gap-4 bg-purple-800/20 rounded-lg p-4 border border-purple-900/80">
-                                        <div className="text-3xl">🎯</div>
-                                        <div>
-                                            <h4 className="text-black dark:text-white font-semibold">Primeiro Jogo</h4>
-                                            <p className="text-black dark:text-white text-sm">Jogou seu primeiro jogo nacional</p>
+                                    {completedMissions.map((mission) => (
+                                        <div key={mission.id} className="flex items-center gap-4 bg-green-500/20 border border-green-500/50 rounded-lg p-4">
+                                            <div className="text-3xl">{mission.icon}</div>
+                                            <div className="flex-1">
+                                                <h4 className="text-black dark:text-white font-semibold">{mission.title}</h4>
+                                                <p className="text-black dark:text-white text-sm">{mission.description}</p>
+                                                <p className="text-green-400 text-xs">Concluída {mission.completedAt}</p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                                                    <span className="text-white text-xs font-bold">💎</span>
+                                                </div>
+                                                <span className="text-green-400 font-bold">+{mission.xpReward} XP</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-center gap-4 bg-purple-800/20 rounded-lg p-4 border border-purple-900/80">
-                                        <div className="text-3xl">🗺️</div>
-                                        <div>
-                                            <h4 className="text-black dark:text-white font-semibold">Explorador</h4>
-                                            <p className="text-black dark:text-white text-sm">Jogou 5 jogos diferentes</p>
-                                        </div>
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
                         )}
@@ -265,11 +464,11 @@ const UserProfilePage = () => {
                                     <div className="bg-purple-800/20 rounded-lg p-6 border border-purple-900/80">
                                         <h4 className="text-black dark:text-white font-semibold mb-4">Progresso do Nível</h4>
                                         <div className="text-center">
-                                            <div className="text-4xl font-bold text-green-400 mb-2">30</div>
+                                            <div className="text-4xl font-bold text-green-400 mb-2">{profileData.level}</div>
                                             <div className="w-full bg-gray-700 rounded-full h-3 mb-2">
-                                                <div className="bg-green-500 h-3 rounded-full" style={{ width: '50%' }}></div>
+                                                <div className="bg-green-500 h-3 rounded-full" style={{ width: `${(profileData.currentXP / profileData.maxXP) * 100}%` }}></div>
                                             </div>
-                                            <p className="text-black dark:text-white text-sm">50/100 XP para o próximo nível</p>
+                                            <p className="text-black dark:text-white text-sm">{profileData.currentXP}/{profileData.maxXP} XP para o próximo nível</p>
                                         </div>
                                     </div>
                                     <div className="bg-purple-800/20 rounded-lg p-6 border border-purple-900/80">
@@ -277,7 +476,7 @@ const UserProfilePage = () => {
                                         <div className="space-y-3">
                                             <div className="flex justify-between">
                                                 <span className="text-black dark:text-white">Total de XP:</span>
-                                                <span className="text-black dark:text-white font-semibold">3050</span>
+                                                <span className="text-black dark:text-white font-semibold">{profileData.currentXP + (profileData.level * 100)}</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-black dark:text-white">Jogos:</span>
@@ -296,51 +495,51 @@ const UserProfilePage = () => {
 
                     {/* Lado Direito - Missões Diárias */}
                     <div className="w-80">
-                        <h3 className="text-2xl font-bold text-black dark:text-white mb-6">Missões diárias</h3>
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-2xl font-bold text-black dark:text-white">Missões diárias</h3>
+                            <button
+                                onClick={regenerateAllMissions}
+                                className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg text-sm font-medium transition-colors"
+                                title="Trocar missões diárias"
+                            >
+                                <RefreshCw className="w-4 h-4" />
+                            </button>
+                        </div>
+
                         <div className="space-y-4">
-                            {/* Missão 1 */}
-                            <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h4 className="text-white font-semibold">Sweet Music</h4>
-                                    <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
-                                        <span className="text-white text-xs">🎵</span>
+                            {dailyMissions.map((mission) => (
+                                <div key={mission.id} className="bg-green-500/20 border border-green-500/50 rounded-lg p-4">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h4 className="text-white font-semibold">{mission.title}</h4>
+                                        <div className="flex items-center gap-2">
+                                            <div className={`w-8 h-8 bg-gradient-to-br ${mission.gemColor} rounded-full flex items-center justify-center shadow-lg`}>
+                                                <span className="text-white text-xs font-bold">💎</span>
+                                            </div>
+                                            <span className="text-green-400 font-bold text-sm">+{mission.xpReward} XP</span>
+                                        </div>
+                                    </div>
+                                    <p className="text-green-300 text-sm mb-4">{mission.description}</p>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => completeMission(mission.id)}
+                                            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium flex-1 transition-colors"
+                                        >
+                                            Concluir
+                                        </button>
+                                        <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium">
+                                            Ver Jogos
+                                        </button>
                                     </div>
                                 </div>
-                                <p className="text-green-300 text-sm mb-3">Give "Sweet Music" sticker to a studio</p>
-                                <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium">
-                                    Browse games
-                                </button>
-                            </div>
+                            ))}
 
-                            {/* Missão 2 */}
-                            <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h4 className="text-white font-semibold">Explorer Badge</h4>
-                                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                                        <span className="text-white text-xs">🏆</span>
-                                    </div>
+                            {dailyMissions.length === 0 && (
+                                <div className="text-center py-8">
+                                    <div className="text-4xl mb-4">🎉</div>
+                                    <h4 className="text-black dark:text-white font-semibold mb-2">Todas as missões concluídas!</h4>
+                                    <p className="text-gray-500 text-sm">Novas missões chegam amanhã</p>
                                 </div>
-                                <p className="text-green-300 text-sm mb-3">Complete 3 different games today</p>
-                                <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium">
-                                    Browse games
-                                </button>
-                            </div>
-
-                            {/* Missão 3 */}
-                            <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <h4 className="text-white font-semibold">Time Master</h4>
-                                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                                        <span className="text-white text-xs">⏰</span>
-                                    </div>
-                                </div>
-                                <p className="text-green-300 text-sm mb-3">Play for 2 hours straight</p>
-                                <div className="flex gap-2">
-                                    <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium flex-1">
-                                        Browse games
-                                    </button>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -377,7 +576,7 @@ const UserProfilePage = () => {
                                         <button
                                             type="button"
                                             onClick={openReadyPlayerMe}
-                                            className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+                                            className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-lg text-sm transition-colors"
                                         >
                                             <User size={16} />
                                             3D Avatar
