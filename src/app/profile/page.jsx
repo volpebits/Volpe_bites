@@ -57,36 +57,28 @@ const UserProfilePage = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isGeneratingAI, setIsGeneratingAI] = useState(false);
 
-    // Estados para missões
-    const [dailyMissions, setDailyMissions] = useState([
-        {
-            id: 1,
-            title: "Sweet Music",
-            description: 'Give "Sweet Music" sticker to a studio',
-            xpReward: 25,
-            gemColor: "from-yellow-400 to-orange-500",
-            icon: "🎵",
-            completed: false
-        },
-        {
-            id: 2,
-            title: "Explorer Badge",
-            description: "Complete 3 different games today",
-            xpReward: 50,
-            gemColor: "from-yellow-400 to-orange-500",
-            icon: "🏆",
-            completed: false
-        },
-        {
-            id: 3,
-            title: "Time Master",
-            description: "Play for 2 hours straight",
-            xpReward: 35,
-            gemColor: "from-yellow-400 to-orange-500",
-            icon: "⏰",
-            completed: false
+    // Estados para missões (iniciar sempre com 5 missões)
+    const [dailyMissions, setDailyMissions] = useState(() => {
+        const initialMissions = [];
+        for (let i = 0; i < 5; i++) {
+            initialMissions.push({
+                id: i + 1,
+                title: ["Sweet Music", "Explorer Badge", "Time Master", "Game Collector", "Social Player"][i],
+                description: [
+                    'Give "Sweet Music" sticker to a studio',
+                    "Complete 3 different games today",
+                    "Play for 2 hours straight",
+                    "Add 2 new games to your library",
+                    "Rate 3 games you played"
+                ][i],
+                xpReward: [25, 50, 35, 40, 30][i],
+                gemColor: "from-yellow-400 to-orange-500",
+                icon: ["🎵", "🏆", "⏰", "📚", "⭐"][i],
+                completed: false
+            });
         }
-    ]);
+        return initialMissions;
+    });
 
     const [completedMissions, setCompletedMissions] = useState([
         {
@@ -153,18 +145,26 @@ const UserProfilePage = () => {
         };
     };
 
-
-
-    // Função para regenerar todas as missões
+    // Função para regenerar todas as missões restantes (não concluídas)
     const regenerateAllMissions = () => {
-        const newMissions = [];
-        const missionCount = Math.floor(Math.random() * 4) + 3; // 3 a 6 missões
+        if (dailyMissions.length === 0) return; // Se não há missões restantes, não faz nada
 
-        for (let i = 0; i < missionCount; i++) {
+        const newMissions = [];
+        const remainingCount = dailyMissions.length; // Manter a mesma quantidade de missões restantes
+
+        for (let i = 0; i < remainingCount; i++) {
             newMissions.push(generateRandomMission());
         }
 
         setDailyMissions(newMissions);
+    };
+
+    // Função para regenerar uma missão específica
+    const regenerateSpecificMission = (missionId) => {
+        const newMission = generateRandomMission();
+        setDailyMissions(dailyMissions.map(mission =>
+            mission.id === missionId ? newMission : mission
+        ));
     };
 
     // Função para completar missão
@@ -497,13 +497,16 @@ const UserProfilePage = () => {
                     <div className="w-80">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-2xl font-bold text-black dark:text-white">Missões diárias</h3>
-                            <button
-                                onClick={regenerateAllMissions}
-                                className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg text-sm font-medium transition-colors"
-                                title="Trocar missões diárias"
-                            >
-                                <RefreshCw className="w-4 h-4" />
-                            </button>
+                            {dailyMissions.length > 0 && (
+                                <button
+                                    onClick={regenerateAllMissions}
+                                    className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                                    title="Trocar todas as missões restantes"
+                                >
+                                    <RefreshCw className="w-4 h-4" />
+                                    Trocar Todas
+                                </button>
+                            )}
                         </div>
 
                         <div className="space-y-4">
@@ -512,6 +515,13 @@ const UserProfilePage = () => {
                                     <div className="flex items-center justify-between mb-3">
                                         <h4 className="text-white font-semibold">{mission.title}</h4>
                                         <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => regenerateSpecificMission(mission.id)}
+                                                className="bg-gray-600 hover:bg-gray-700 text-white p-1 rounded text-xs transition-colors"
+                                                title="Trocar esta missão"
+                                            >
+                                                <RefreshCw className="w-3 h-3" />
+                                            </button>
                                             <div className={`w-8 h-8 bg-gradient-to-br ${mission.gemColor} rounded-full flex items-center justify-center shadow-lg`}>
                                                 <span className="text-white text-xs font-bold">💎</span>
                                             </div>
