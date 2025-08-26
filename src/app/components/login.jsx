@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Eye, EyeOff, X, ArrowLeft, Sparkles, Camera, Wand2, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, X, ArrowLeft, Camera, Wand2, Loader2 } from 'lucide-react';
 
 // Seu Google Client ID
 const GOOGLE_CLIENT_ID = "306605130597-nkfa413h7gsk17nhja0rc7dvnqp95fqs.apps.googleusercontent.com";
@@ -14,10 +14,19 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
     const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
     const [isRecaptchaLoaded, setIsRecaptchaLoaded] = useState(false);
     const [recaptchaToken, setRecaptchaToken] = useState(null);
-
     const [previewImage, setPreviewImage] = useState(null);
     const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        username: '',
+        avatar: '' // novo campo para salvar a URL do avatar
+    });
+
+
+    // Estados derivados
     const isLogin = authMode === 'login';
     const isRegister = authMode === 'register';
     const isForgotPassword = authMode === 'forgot-password';
@@ -45,6 +54,25 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
             } else {
                 setTimeout(initGoogleAuth, 500);
             }
+        };
+        const handleRegister = (e) => {
+            e.preventDefault();
+
+            // Criar objeto do usuário
+            const usuario = {
+                username: formData.username,
+                email: formData.email,
+                password: formData.password, // ⚠️ só para testes, não use em produção
+                avatar: formData.avatar
+            };
+
+            // Salvar no localStorage
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+
+            alert('Registro realizado com sucesso!');
+
+            // Limpar formulário
+            setFormData({ email: '', password: '', username: '', avatar: '' });
         };
 
         const initRecaptcha = () => {
@@ -99,40 +127,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         };
     }, []);
 
-    // Callback para processar a resposta do Google
-    const handleGoogleCallback = async (response) => {
-        try {
-            console.log('Google Login Success:', response);
-            
-            const payload = JSON.parse(atob(response.credential.split('.')[1]));
-            
-            console.log('User Info:', {
-                email: payload.email,
-                name: payload.name,
-                picture: payload.picture,
-                sub: payload.sub
-            });
-
-            alert(`Login realizado com sucesso!\nBem-vindo, ${payload.name}!`);
-            setIsOpen(false);
-            
-        } catch (error) {
-            console.error('Erro ao processar login do Google:', error);
-            alert('Erro ao fazer login com Google. Tente novamente.');
-        }
-    };
-
-    // Função para lidar com o reCAPTCHA
-    const handleRecaptchaChange = (token) => {
-        setRecaptchaToken(token);
-        console.log('reCAPTCHA token:', token);
-    };
-
-    const handleRecaptchaExpired = () => {
-        setRecaptchaToken(null);
-        console.log('reCAPTCHA expirado');
-    };
-
     // Renderizar reCAPTCHA quando necessário
     useEffect(() => {
         if (isRecaptchaLoaded && isRegister && isOpen) {
@@ -155,13 +149,48 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         }
     }, [isRecaptchaLoaded, isRegister, isOpen]);
 
+    // Callback para processar a resposta do Google
+    const handleGoogleCallback = async (response) => {
+        try {
+            console.log('Google Login Success:', response);
+
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+
+            const userInfo = {
+                email: payload.email,
+                name: payload.name,
+                picture: payload.picture,
+                sub: payload.sub,
+                loginTime: new Date().toISOString(),
+                loginMethod: 'google'
+            };
+
+            console.log('User Info:', userInfo);
+            alert(`Login realizado com sucesso!\nBem-vindo, ${payload.name}!`);
+            setIsOpen(false);
+
+        } catch (error) {
+            console.error('Erro ao processar login do Google:', error);
+            alert('Erro ao fazer login com Google. Tente novamente.');
+        }
+    };
+
+    // Função para lidar com o reCAPTCHA
+    const handleRecaptchaChange = (token) => {
+        setRecaptchaToken(token);
+        console.log('reCAPTCHA token:', token);
+    };
+
+    const handleRecaptchaExpired = () => {
+        setRecaptchaToken(null);
+        console.log('reCAPTCHA expirado');
+    };
+
     // Função para gerar avatar com IA (simulada)
     const generateAIAvatar = async (type = 'dicebear') => {
         setIsGeneratingAI(true);
-        
-        // Simulação de chamada para IA (substitua pela sua implementação)
+
         setTimeout(() => {
-            // Usando uma imagem placeholder para demonstração
             const aiAvatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`;
             setPreviewImage(aiAvatarUrl);
             setIsGeneratingAI(false);
@@ -174,41 +203,24 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         window.open(readyPlayerUrl, '_blank', 'width=400,height=600');
     };
 
-    // Função simplificada para login com Google
+    // Função para lidar com mudanças nos inputs
+    const handleInputChange = (field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
+    };
+
+
+    // Função para login com Google
     const handleGoogleLogin = () => {
-        if (window.google && window.google.accounts && isGoogleLoaded) {
+        if (isGoogleLoaded && window.google && window.google.accounts) {
             try {
-                // Método mais direto - cria um botão temporário e dispara o clique
-                const tempContainer = document.createElement('div');
-                tempContainer.style.position = 'fixed';
-                tempContainer.style.top = '-9999px';
-                tempContainer.style.left = '-9999px';
-                document.body.appendChild(tempContainer);
-
-                window.google.accounts.id.renderButton(tempContainer, {
-                    theme: 'outline',
-                    size: 'large',
-                    width: '300',
-                    type: 'standard',
-                    shape: 'rectangular',
-                    logo_alignment: 'left',
-                    ux_mode: 'popup'
-                });
-
-                // Simular clique no botão
-                setTimeout(() => {
-                    const button = tempContainer.querySelector('div[role="button"]');
-                    if (button) {
-                        button.click();
+                window.google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        console.log('Google prompt não foi exibido');
                     }
-                    // Limpar o elemento temporário
-                    setTimeout(() => {
-                        if (document.body.contains(tempContainer)) {
-                            document.body.removeChild(tempContainer);
-                        }
-                    }, 1000);
-                }, 100);
-
+                });
             } catch (error) {
                 console.error('Erro ao iniciar login Google:', error);
                 alert('Erro ao conectar com Google. Tente novamente.');
@@ -220,21 +232,31 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         // Validar reCAPTCHA apenas no registro
         if (isRegister && !recaptchaToken) {
             alert('Por favor, complete o reCAPTCHA');
             return;
         }
 
-        // Aqui você processaria o formulário
-        console.log('Formulário enviado:', {
+        // Processar dados do formulário
+        const submissionData = {
+            ...formData,
             mode: authMode,
             recaptchaToken: recaptchaToken,
-            previewImage: previewImage
-        });
-        
-        alert(`${authMode === 'login' ? 'Login' : authMode === 'register' ? 'Cadastro' : 'Recuperação'} realizado com sucesso!`);
+            previewImage: previewImage,
+            timestamp: new Date().toISOString(),
+            rememberMe: rememberMe
+        };
+
+        console.log('Formulário enviado:', submissionData);
+
+        const message = authMode === 'login' ? 'Login' :
+            authMode === 'register' ? 'Cadastro' :
+                'Recuperação';
+
+        alert(`${message} realizado com sucesso!`);
+        setIsOpen(false);
     };
 
     const handleForgotPassword = () => {
@@ -243,7 +265,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
 
     const handleBackToLogin = () => {
         setAuthMode('login');
-        // Limpar token do reCAPTCHA ao mudar de modo
         setRecaptchaToken(null);
     };
 
@@ -271,9 +292,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
 
             {/* Painel deslizante */}
             <div
-                className={`fixed inset-0 z-50 flex font-poppins transition-transform duration-500 ease-in-out ${
-                    isOpen ? 'translate-x-0' : 'translate-x-full'
-                }`}
+                className={`fixed inset-0 z-50 flex font-sans transition-transform duration-500 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'
+                    }`}
             >
                 {/* Parte esquerda clicável */}
                 <div
@@ -292,17 +312,9 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                     </button>
 
                     {/* Cabeçalho */}
-                    <div className="w-full max-w-md mx-auto mt-10 space-y-10 animate-fade-in">
+                    <div className="w-full max-w-md mx-auto mt-10 space-y-10">
                         <div className="flex items-center space-x-4">
-                            {isRegister && (
-                                <button
-                                    onClick={handleBackToLogin}
-                                    className="text-gray-500 hover:text-gray-700 transition"
-                                >
-                                    <ArrowLeft size={20} />
-                                </button>
-                            )}
-                            {isForgotPassword && (
+                            {(isRegister || isForgotPassword) && (
                                 <button
                                     onClick={handleBackToLogin}
                                     className="text-gray-500 hover:text-gray-700 transition"
@@ -322,8 +334,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                     </div>
 
                     {/* Formulário */}
-                    <div className="w-full max-w-md mx-auto mt-10 space-y-10 animate-fade-in">
-                        <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="w-full max-w-md mx-auto mt-10 space-y-10">
+                        <div className="space-y-6">
                             {/* Seção de Perfil - apenas no registro */}
                             {isRegister && (
                                 <div className="text-center space-y-4">
@@ -356,7 +368,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                             <Camera size={16} />
                                             3D Avatar
                                         </button>
-                                        
+
                                         <button
                                             type="button"
                                             onClick={() => generateAIAvatar('dicebear')}
@@ -370,17 +382,21 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                 </div>
                             )}
 
+
                             {/* Campo Usuário - apenas no registro */}
                             {isRegister && (
                                 <div>
                                     <label className="block text-sm text-gray-600 dark:text-white mb-1">Usuário</label>
                                     <input
                                         type="text"
-                                        placeholder="Seu usuário"
+                                        placeholder="Digite seu usuário"
+                                        value={formData.username}
+                                        onChange={(e) => handleInputChange('username', e.target.value)}
                                         className="w-full border border-gray-300 text-black px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
                                     />
                                 </div>
                             )}
+
 
                             {/* Campo E-mail */}
                             <div>
@@ -390,24 +406,28 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                 <input
                                     type="email"
                                     placeholder="seu@email.com"
-                                    className="w-full border border-gray-300 dark:text-black px-4 py-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
+                                    value={formData.email}
+                                    onChange={(e) => handleInputChange('email', e.target.value)}
+                                    className="w-full border border-gray-300 text-black px-4 py-3 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
                                 />
                             </div>
 
                             {/* Campo Senha */}
                             {!isForgotPassword && (
                                 <div>
-                                    <label className="block text-sm text-gray-600 dark:text-white  mb-1">Senha</label>
+                                    <label className="block text-sm text-gray-600 dark:text-white mb-1">Senha</label>
                                     <div className="relative">
                                         <input
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="********"
-                                            className="w-full border border-gray-300 dark:text-black px-4 py-3 pr-10 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
+                                            value={formData.password}
+                                            onChange={(e) => handleInputChange('password', e.target.value)}
+                                            className="w-full border border-gray-300 text-black px-4 py-3 pr-10 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="dark: text-black absolute inset-y-0 right-0 pr-3 flex items-center"
+                                            className="text-black absolute inset-y-0 right-0 pr-3 flex items-center"
                                         >
                                             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                         </button>
@@ -419,7 +439,16 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                         </p>
                                     )}
                                     {isLogin && (
-                                        <div className="w-full flex justify-end mt-2">
+                                        <div className="w-full flex justify-between items-center mt-2">
+                                            <label className="flex items-center space-x-2">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={rememberMe}
+                                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                                    className="w-4 h-4 text-green-500 border-gray-300 rounded focus:ring-green-500"
+                                                />
+                                                <span className="text-sm text-gray-600 dark:text-white">Lembrar-me</span>
+                                            </label>
                                             <button
                                                 type="button"
                                                 onClick={handleForgotPassword}
@@ -436,8 +465,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                             {isRegister && (
                                 <>
                                     <div className="mt-4">
-                                        <div 
-                                            id="recaptcha-container" 
+                                        <div
+                                            id="recaptcha-container"
                                             className="flex justify-center"
                                         >
                                             {!isRecaptchaLoaded && (
@@ -462,7 +491,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
 
                             {/* Botão principal */}
                             <button
-                                type="submit"
+                                type="button"
+                                onClick={handleSubmit}
                                 className="w-full bg-gradient-to-r from-green-400 to-green-700 text-white py-4 rounded-full mt-4 transition-all duration-300 hover:scale-105 hover:shadow-md"
                             >
                                 {getButtonText()}
@@ -483,17 +513,16 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                     type="button"
                                     onClick={handleGoogleLogin}
                                     disabled={!isGoogleLoaded}
-                                    className={`w-full flex items-center justify-center gap-3 bg-white border-2 border-green-500 text-gray-700 py-4 rounded-full transition-all duration-300 hover:bg-gray-50 hover:shadow-md ${
-                                        !isGoogleLoaded ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
-                                    }`}
+                                    className={`w-full flex items-center justify-center gap-3 bg-white border-2 border-green-500 text-gray-700 py-4 rounded-full transition-all duration-300 hover:bg-gray-50 hover:shadow-md ${!isGoogleLoaded ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+                                        }`}
                                 >
                                     <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
                                     </svg>
-                                    {isGoogleLoaded 
+                                    {isGoogleLoaded
                                         ? (isLogin ? 'Entrar com Google' : 'Cadastrar com Google')
                                         : 'Carregando Google...'
                                     }
@@ -535,7 +564,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                     </p>
                                 </div>
                             )}
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
