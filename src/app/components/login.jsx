@@ -230,6 +230,47 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         }
     };
 
+    //Função carregar dados do localStorage ao inicializar
+    useEffect(() => {
+        const savedAuth = localStorage.getItem('authData');
+        if (savedAuth) {
+            try {
+                const authData = JSON.parse(savedAuth);
+                if (authData.isLoggedIn && authData.user) {
+                    console.log('Usuário restaurado do localStorage:', authData.user);
+                    // Aqui você pode definir um estado global ou callback para informar que o usuário está logado
+                    // Por exemplo: onUserLoggedIn?.(authData.user);
+                }
+            } catch (error) {
+                console.error('Erro ao ler localStorage:', error);
+                localStorage.removeItem('authData');
+            }
+        }
+    }, []);
+
+    // Carregar dados do localStorage ao inicializar
+    useEffect(() => {
+        const savedAuth = localStorage.getItem('authData');
+        if (savedAuth) {
+            try {
+                const authData = JSON.parse(savedAuth);
+                if (authData.isLoggedIn && authData.user) {
+                    console.log('Usuário restaurado do localStorage:', authData.user);
+                    // Aqui você pode definir um estado global ou callback para informar que o usuário está logado
+                    // Por exemplo: onUserLoggedIn?.(authData.user);
+                }
+            } catch (error) {
+                console.error('Erro ao ler localStorage:', error);
+                localStorage.removeItem('authData');
+            }
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('authData');
+        console.log('Logout realizado e localStorage limpo');
+        // Aqui você pode chamar um callback: onUserLoggedOut?.();
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -239,7 +280,43 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
             return;
         }
 
-        // Processar dados do formulário
+        // Para forgot-password, só enviar email
+        if (isForgotPassword) {
+            if (!formData.email) {
+                alert('Digite seu e-mail para recuperação');
+                return;
+            }
+            alert('Link de recuperação enviado para seu e-mail!');
+            setIsOpen(false);
+            return;
+        }
+
+        // Validar login/cadastro
+        if (!formData.email || !formData.password) {
+            alert('Preencha email e senha!');
+            return;
+        }
+
+        // Criar dados do usuário
+        const userData = {
+            id: Date.now(),
+            email: formData.email,
+            username: formData.username || formData.email.split('@')[0],
+            avatar: previewImage,
+            loginTime: new Date().toLocaleString(),
+            mode: authMode
+        };
+
+        // Salvar no localStorage
+        localStorage.setItem('authData', JSON.stringify({
+            user: userData,
+            isLoggedIn: true,
+            token: 'token_' + Date.now(),
+            rememberMe: rememberMe,
+            timestamp: new Date().toISOString()
+        }));
+
+        // Processar dados do formulário (seu log original)
         const submissionData = {
             ...formData,
             mode: authMode,
@@ -250,6 +327,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         };
 
         console.log('Formulário enviado:', submissionData);
+        console.log('Dados salvos no localStorage:', userData);
 
         const message = authMode === 'login' ? 'Login' :
             authMode === 'register' ? 'Cadastro' :
@@ -258,7 +336,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         alert(`${message} realizado com sucesso!`);
         setIsOpen(false);
     };
-
     const handleForgotPassword = () => {
         setAuthMode('forgot-password');
     };
