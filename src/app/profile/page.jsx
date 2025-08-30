@@ -51,7 +51,7 @@ const uid = () =>
     `${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
 const GLOBAL_KEYS = {
-    auth: "volpe_auth",        // { email, password } – quem está logado agora
+    auth: "volpe_auth",        // { email, password }
     userDataSeed: "userData",  // opcional: semente do cadastro
 };
 
@@ -622,43 +622,43 @@ const UserProfilePage = () => {
         !isTodayOnOrAfter(missionsAvailableAt);
 
     return (
-        <div className="min-h-screen p-4 bg-gradient-to-br from-white via-purple-400 to-purple-950 dark:bg-gradient-to-br dark:from-black dark:via-purple-700 dark:to-purple-950">
+        <div className="min-h-screen p-4 sm:p-6 bg-gradient-to-br from-white via-purple-400 to-purple-950 dark:bg-gradient-to-br dark:from-black dark:via-purple-700 dark:to-purple-950">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="flex items-start gap-8 mb-8">
-                    <div className="flex items-start gap-6">
+                <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-8 mb-8">
+                    <div className="flex items-start gap-4 md:gap-6">
                         <div className="relative">
-                            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-600 dark:border-gray-300 bg-gray-700 dark:bg-gray-200 mb-4">
+                            <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-gray-600 dark:border-gray-300 bg-gray-700 dark:bg-gray-200 mb-4">
                                 {profileData.avatar ? (
                                     <img src={profileData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center">
-                                        <User className="w-16 h-16 text-gray-400" aria-hidden />
+                                        <User className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 text-gray-400" aria-hidden />
                                     </div>
                                 )}
                             </div>
                         </div>
 
                         <div>
-                            <h1 className="text-3xl font-bold text-black dark:text-white mb-1">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white mb-1">
                                 {profileData.name || "Usuário"}
                             </h1>
 
                             <div className="text-sm text-black/80 dark:text-white/80 mb-3">
                                 {profileData.email ? (
                                     <span>
-                                        E-mail: <span className="font-semibold">{profileData.email}</span>
+                                        E-mail: <span className="font-semibold break-all">{profileData.email}</span>
                                     </span>
                                 ) : (
                                     <span className="italic">E-mail não definido</span>
                                 )}
                             </div>
 
-                            <p className="text-gray-900 dark:text-white text-lg mb-4">
+                            <p className="text-black dark:text-white text-base sm:text-lg mb-4">
                                 {profileData.about || "Adicione uma bio para contar um pouco sobre você!"}
                             </p>
 
-                            <div className="flex items-center gap-6 text-gray-400 text-sm">
+                            <div className="flex items-center gap-4 sm:gap-6 text-gray-400 text-sm">
                                 <span className="flex items-center gap-1">
                                     <Calendar className="text-black dark:text-white w-4 h-4" aria-hidden />
                                     <span className="text-black dark:text-white" suppressHydrationWarning>
@@ -669,17 +669,17 @@ const UserProfilePage = () => {
                         </div>
                     </div>
 
-                    <div className="flex gap-3 ml-auto">
+                    <div className="flex gap-3 flex-wrap md:ml-auto mt-4 md:mt-0">
                         <button
                             onClick={handleEditProfile}
-                            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium"
+                            className="flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-5 py-3 rounded-lg font-medium w-full sm:w-auto"
                         >
                             <Edit3 className="w-4 h-4" aria-hidden />
                             Editar Perfil
                         </button>
                         <button
                             onClick={() => window.history.back()}
-                            className="text-black dark:text-gray-100 hover:text-white font-bold px-4 py-3"
+                            className="text-black dark:text-gray-100 hover:text-white font-bold px-4 py-3 w-full sm:w-auto"
                         >
                             Voltar
                         </button>
@@ -687,9 +687,9 @@ const UserProfilePage = () => {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-4 gap-6 mb-8">
-                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80">
-                        <div className="text-3xl font-bold text-green-400 mb-1">Nível {profileData.level}</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-5 md:p-6 border border-purple-900/80">
+                        <div className="text-2xl sm:text-3xl font-bold text-green-400 mb-1">Nível {profileData.level}</div>
                         <div className="text-black dark:text-white font-bold mb-3">
                             XP: {profileData.currentXP}/{profileData.maxXP}
                         </div>
@@ -704,24 +704,24 @@ const UserProfilePage = () => {
                         </div>
                     </div>
 
-                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80 text-center">
-                        <div className="text-4xl font-bold text-green-400 mb-2">
+                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-5 md:p-6 border border-purple-900/80 text-center">
+                        <div className="text-3xl sm:text-4xl font-bold text-green-400 mb-2">
                             {achievementsCount}
                         </div>
                         <div className="text-black dark:text-white font-bold mb-2">Conquistas</div>
                         <Trophy className="w-8 h-8 text-yellow-500 mx-auto" aria-hidden />
                     </div>
 
-                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80 text-center">
-                        <div className="text-4xl font-bold text-green-400 mb-2">
+                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-5 md:p-6 border border-purple-900/80 text-center">
+                        <div className="text-3xl sm:text-4xl font-bold text-green-400 mb-2">
                             {profileData.gamesCount}
                         </div>
                         <div className="text-black dark:text-white font-bold mb-2">Jogos</div>
                         <Gamepad2 className="w-8 h-8 text-purple-900 dark:text-purple-500 font-bold mx-auto" aria-hidden />
                     </div>
 
-                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80 text-center">
-                        <div className="text-4xl font-bold text-green-400 mb-2">
+                    <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-5 md:p-6 border border-purple-900/80 text-center">
+                        <div className="text-3xl sm:text-4xl font-bold text-green-400 mb-2">
                             {profileData.totalPlaytimeHours}h
                         </div>
                         <div className="text-black dark:text-white font-bold mb-2">Tempo de Jogo</div>
@@ -729,11 +729,11 @@ const UserProfilePage = () => {
                     </div>
                 </div>
 
-                <div className="flex gap-8">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                     {/* Lado Esquerdo - Tabs e Conteúdo */}
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                         {/* Tabs */}
-                        <div className="flex border-b border-gray-900 mb-6">
+                        <div className="flex flex-wrap gap-x-2 border-b border-gray-900 mb-4 sm:mb-6">
                             {[
                                 { id: "overview", label: "Visão Geral" },
                                 { id: "games", label: "Jogos" },
@@ -743,7 +743,7 @@ const UserProfilePage = () => {
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`px-6 py-3 font-medium transition-colors ${activeTab === tab.id
+                                    className={`px-4 sm:px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === tab.id
                                             ? "text-green-400 border-b-2 border-green-400"
                                             : "text-black dark:text-white hover:text-white"
                                         }`}
@@ -887,13 +887,13 @@ const UserProfilePage = () => {
                                                 </p>
                                             )}
 
-                                            <div className="flex gap-2">
+                                            <div className="flex flex-col sm:flex-row gap-2">
                                                 <input
                                                     type="text"
                                                     value={newGenre ?? ""}
                                                     onChange={(e) => setNewGenre(e.target.value)}
                                                     onKeyDown={(e) => e.key === "Enter" && addFavoriteGenre()}
-                                                    className="w-64 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white"
+                                                    className="w-full sm:w-64 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white"
                                                     placeholder="Ex.: RPG, Aventura…"
                                                 />
                                                 <button
@@ -997,7 +997,7 @@ const UserProfilePage = () => {
                         {activeTab === "stats" && (
                             <div>
                                 <h3 className="text-2xl font-bold text-black dark:text-white mb-6">Estatísticas</h3>
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="bg-purple-800/20 rounded-lg p-6 border border-purple-900/80">
                                         <h4 className="text-black dark:text-white font-semibold mb-4">
                                             Progresso do Nível
@@ -1054,10 +1054,10 @@ const UserProfilePage = () => {
                     </div>
 
                     {/* Lado Direito - Onboarding OU Missões */}
-                    <div className="w-80">
+                    <div className="w-full lg:w-80 flex-none lg:sticky lg:top-4">
                         {!onboarding.missionsUnlocked ? (
                             <>
-                                <h3 className="text-2xl font-bold text-black dark:text-white mb-6">
+                                <h3 className="text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6">
                                     Comece sua jornada
                                 </h3>
                                 <div className="space-y-4">
@@ -1128,7 +1128,7 @@ const UserProfilePage = () => {
                             </>
                         ) : (
                             <>
-                                <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center justify-between mb-4 sm:mb-6">
                                     <h3 className="text-2xl font-bold text-black dark:text-white">Missões diárias</h3>
                                     {dailyMissions.length > 0 && (
                                         <button
@@ -1224,7 +1224,7 @@ const UserProfilePage = () => {
                             role="dialog"
                             aria-modal="true"
                             aria-labelledby="edit-profile-title"
-                            className="relative mx-auto mt-16 w-full max-w-md rounded-lg bg-white dark:bg-zinc-800 p-6 shadow-xl"
+                            className="relative mx-auto mt-8 sm:mt-16 w-[92vw] max-w-md rounded-lg bg-white dark:bg-zinc-800 p-6 shadow-xl"
                         >
                             <div className="flex items-center justify-between mb-6">
                                 <h2 id="edit-profile-title" className="text-2xl font-bold text-black dark:text-white">
@@ -1252,7 +1252,7 @@ const UserProfilePage = () => {
                                         )}
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-2">
+                                    <div className="grid grid-cols-2 gap-2 w-full">
                                         <button
                                             type="button"
                                             onClick={() => {
@@ -1369,7 +1369,7 @@ const UserProfilePage = () => {
                             </div>
 
                             {/* Botões */}
-                            <div className="flex gap-3 mt-6">
+                            <div className="flex flex-col sm:flex-row gap-3 mt-6">
                                 <button
                                     onClick={handleSaveProfile}
                                     disabled={!!newPwd && newPwd !== confirmPwd}
