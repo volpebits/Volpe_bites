@@ -644,13 +644,13 @@ const UserProfilePage = () => {
                                 {profileData.name || "Usuário"}
                             </h1>
 
-                            <div className="text-sm text-black/80 dark:text-white/80 mb-3">
+                            <div className="text-sm text-black/80 dark:text-white/80 font-bold mb-3">
                                 {profileData.email ? (
                                     <span>
-                                        E-mail: <span className="font-semibold break-all">{profileData.email}</span>
+                                        E-mail: <span className="font-bold break-all">{profileData.email}</span>
                                     </span>
                                 ) : (
-                                    <span className="italic">E-mail não definido</span>
+                                    <span className="italic font-bold">E-mail não definido</span>
                                 )}
                             </div>
 
@@ -661,7 +661,7 @@ const UserProfilePage = () => {
                             <div className="flex items-center gap-4 sm:gap-6 text-gray-400 text-sm">
                                 <span className="flex items-center gap-1">
                                     <Calendar className="text-black dark:text-white w-4 h-4" aria-hidden />
-                                    <span className="text-black dark:text-white" suppressHydrationWarning>
+                                    <span className="text-black dark:text-white font-bold" suppressHydrationWarning>
                                         Membro desde {new Date(profileData.memberSince + "T00:00:00").toLocaleDateString("pt-BR")}
                                     </span>
                                 </span>
@@ -733,7 +733,7 @@ const UserProfilePage = () => {
                     {/* Lado Esquerdo - Tabs e Conteúdo */}
                     <div className="flex-1 min-w-0">
                         {/* Tabs */}
-                        <div className="flex flex-wrap gap-x-2 border-b border-gray-900 mb-4 sm:mb-6">
+                        <div className="flex flex-wrap gap-x-2 border-b font-bold border-gray-900 mb-4 sm:mb-6">
                             {[
                                 { id: "overview", label: "Visão Geral" },
                                 { id: "games", label: "Jogos" },
@@ -776,8 +776,8 @@ const UserProfilePage = () => {
                                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                             {/* Objetivo do nível */}
                                             <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80">
-                                                <h4 className="text-black dark:text-white font-semibold mb-3">Objetivo do nível</h4>
-                                                <p className="text-sm text-white/80 mb-2">
+                                                <h4 className="text-green-500 font-bold mb-3">Objetivo do nível</h4>
+                                                <p className="text-sm font-bold text-black dark:text-white mb-2">
                                                     Faltam{" "}
                                                     <span className="font-bold text-green-300">
                                                         {Math.max(0, profileData.maxXP - profileData.currentXP)} XP
@@ -790,7 +790,7 @@ const UserProfilePage = () => {
                                                         style={{ width: `${(profileData.currentXP / profileData.maxXP) * 100}%` }}
                                                     />
                                                 </div>
-                                                <p className="text-xs text-gray-300">
+                                                <p className="text-xs font-bold text-black dark:text-white">
                                                     {profileData.currentXP}/{profileData.maxXP} XP
                                                 </p>
                                                 <div className="mt-4 text-sm">
@@ -800,7 +800,7 @@ const UserProfilePage = () => {
                                                             missão(ões) ativas hoje.
                                                         </p>
                                                     ) : missionsAvailableAt && !isTodayOnOrAfter(missionsAvailableAt) ? (
-                                                        <p className="text-white/80">
+                                                        <p className="font-bold text-black dark:text-white">
                                                             Novas missões em <span className="font-semibold">{formatDateBR(missionsAvailableAt)}</span>.
                                                         </p>
                                                     ) : (
@@ -811,37 +811,37 @@ const UserProfilePage = () => {
 
                                             {/* Atividade recente */}
                                             <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80">
-                                                <h4 className="text-black dark:text-white font-semibold mb-3">Atividade recente</h4>
+                                                <h4 className="text-green-500 font-bold mb-3">Atividade recente</h4>
                                                 <div className="space-y-3">
                                                     <div>
-                                                        <p className="text-sm text-white/70 mb-1">Jogos</p>
+                                                        <p className="text-sm font-bold text-green-500 dark:text-green-300 mb-1">Jogos</p>
                                                         {profileData.recentGames?.length ? (
-                                                            <ul className="text-sm text-white/90 list-disc list-inside space-y-1">
+                                                            <ul className="text-sm font-bold text-black dark:text-white list-disc list-inside space-y-1">
                                                                 {profileData.recentGames.slice(0, 3).map((g, i) => (
                                                                     <li key={i}>
                                                                         <span className="font-semibold">{g.name}</span>{" "}
-                                                                        <span className="text-white/60">— {g.playedAt}</span>
+                                                                        <span className="font-bold text-black dark:text-white">— {g.playedAt}</span>
                                                                     </li>
                                                                 ))}
                                                             </ul>
                                                         ) : (
-                                                            <p className="text-sm text-white/60">Sem jogos ainda.</p>
+                                                            <p className="text-sm font-bold text-black dark:text-white">Sem jogos ainda.</p>
                                                         )}
                                                     </div>
 
                                                     <div className="pt-2 border-t border-white/10">
-                                                        <p className="text-sm text-white/70 mb-1">Conquistas</p>
+                                                        <p className="text-sm font-bold text-black dark:text-white mb-1">Conquistas</p>
                                                         {profileData.completedMissions?.length ? (
-                                                            <ul className="text-sm text-white/90 list-disc list-inside space-y-1">
+                                                            <ul className="text-sm font-bold text-black dark:text-white list-disc list-inside space-y-1">
                                                                 {profileData.completedMissions.slice(0, 3).map((m) => (
                                                                     <li key={m.id}>
                                                                         <span className="font-semibold">{m.title}</span>{" "}
-                                                                        <span className="text-white/60">— +{m.xpReward} XP</span>
+                                                                        <span className="font-bold text-black dark:text-white">— +{m.xpReward} XP</span>
                                                                     </li>
                                                                 ))}
                                                             </ul>
                                                         ) : (
-                                                            <p className="text-sm text-white/60">Ainda sem conquistas. Bora nessas missões!</p>
+                                                            <p className="text-sm font-bold text-black dark:text-white">Ainda sem conquistas. Bora nessas missões!</p>
                                                         )}
                                                     </div>
                                                 </div>
@@ -849,8 +849,8 @@ const UserProfilePage = () => {
 
                                             {/* Dica do dia */}
                                             <div className="bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80">
-                                                <h4 className="text-black dark:text-white font-semibold mb-3">Dica do dia</h4>
-                                                <p className="text-white/90">
+                                                <h4 className="text-green-500 font-bold mb-3">Dica do dia</h4>
+                                                <p className="text-black dark:text-white font-bold">
                                                     {DAILY_TIPS[tipIndexForDay(todayISO())]}
                                                 </p>
                                             </div>
@@ -882,7 +882,7 @@ const UserProfilePage = () => {
                                                     ))}
                                                 </div>
                                             ) : (
-                                                <p className="text-white/70 mb-3">
+                                                <p className="font-bold text-black dark:text-white mb-3">
                                                     Nenhum gênero adicionado ainda. Comece adicionando os que você mais curte!
                                                 </p>
                                             )}
@@ -931,7 +931,7 @@ const UserProfilePage = () => {
                                                 className="flex items-center gap-4 bg-purple-800/20 rounded-lg p-4 border border-purple-900/80"
                                             >
                                                 <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-                                                    <span className="text-white font-bold text-xs">
+                                                    <span className="font-bold text-black dark:text-white font-bold text-xs">
                                                         {game.name.substring(0, 3)}
                                                     </span>
                                                 </div>
@@ -1029,8 +1029,8 @@ const UserProfilePage = () => {
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-black dark:text-white">Jogos:</span>
-                                                <span className="text-black dark:text-white font-semibold">
+                                                <span className="text-black dark:text-white font-bold">Jogos:</span>
+                                                <span className="text-black dark:text-white font-bold">
                                                     {profileData.gamesCount}
                                                 </span>
                                             </div>
@@ -1193,10 +1193,10 @@ const UserProfilePage = () => {
                                         missionsLocked ? (
                                             <div className="text-center py-8">
                                                 <div className="text-4xl mb-4" aria-hidden>⏳</div>
-                                                <h4 className="text-black dark:text-white font-semibold mb-2">
+                                                <h4 className="text-black dark:text-white font-bold mb-2">
                                                     Novas missões amanhã
                                                 </h4>
-                                                <p className="text-gray-200 text-sm">
+                                                <p className="text-green-500 font-bold text-sm">
                                                     Disponíveis em {formatDateBR(missionsAvailableAt)}
                                                 </p>
                                             </div>
@@ -1350,7 +1350,7 @@ const UserProfilePage = () => {
                                         <button
                                             type="button"
                                             onClick={() => setShowPwd((s) => !s)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 dark:text-green-300"
                                         >
                                             {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                         </button>
