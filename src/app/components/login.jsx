@@ -2,11 +2,11 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, X, ArrowLeft, Camera, Wand2, Loader2 } from 'lucide-react';
 
-// Seu Google Client ID
-const GOOGLE_CLIENT_ID = "306605130597-nkfa413h7gsk17nhja0rc7dvnqp95fqs.apps.googleusercontent.com";
-
 // Substitua pela sua chave do reCAPTCHA v2
 const RECAPTCHA_SITE_KEY = "6LcEf6orAAAAAJHRrGuwH--ZGIKtMS340oAzjmYg";
+
+// Seu Google Client ID
+const GOOGLE_CLIENT_ID = "7312797453-3qrevsf21l0gbf0hn1480ntapqm595vr.apps.googleusercontent.com";
 
 export default function SlidePanel({ isOpen, setIsOpen }) {
     const [authMode, setAuthMode] = useState('login');
@@ -17,7 +17,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
     const [previewImage, setPreviewImage] = useState(null);
     const [isGeneratingAI, setIsGeneratingAI] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
-
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -25,11 +24,31 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         avatar: '' // novo campo para salvar a URL do avatar
     });
 
-
     // Estados derivados
     const isLogin = authMode === 'login';
     const isRegister = authMode === 'register';
     const isForgotPassword = authMode === 'forgot-password';
+
+    // Função para lidar com registro
+    const handleRegister = (e) => {
+        e.preventDefault();
+
+        // Criar objeto do usuário
+        const usuario = {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password, // ⚠️ só para testes, não use em produção
+            avatar: formData.avatar
+        };
+
+        // Salvar no localStorage
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+
+        alert('Registro realizado com sucesso!');
+
+        // Limpar formulário
+        setFormData({ email: '', password: '', username: '', avatar: '' });
+    };
 
     // Inicializar Google OAuth e reCAPTCHA quando o componente montar
     useEffect(() => {
@@ -54,25 +73,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
             } else {
                 setTimeout(initGoogleAuth, 500);
             }
-        };
-        const handleRegister = (e) => {
-            e.preventDefault();
-
-            // Criar objeto do usuário
-            const usuario = {
-                username: formData.username,
-                email: formData.email,
-                password: formData.password, // ⚠️ só para testes, não use em produção
-                avatar: formData.avatar
-            };
-
-            // Salvar no localStorage
-            localStorage.setItem('usuario', JSON.stringify(usuario));
-
-            alert('Registro realizado com sucesso!');
-
-            // Limpar formulário
-            setFormData({ email: '', password: '', username: '', avatar: '' });
         };
 
         const initRecaptcha = () => {
@@ -193,6 +193,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         setTimeout(() => {
             const aiAvatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`;
             setPreviewImage(aiAvatarUrl);
+            setFormData(prev => ({ ...prev, avatar: aiAvatarUrl }));
             setIsGeneratingAI(false);
         }, 2000);
     };
@@ -210,7 +211,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
             [field]: value
         }));
     };
-
 
     // Função para login com Google
     const handleGoogleLogin = () => {
@@ -230,32 +230,36 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         }
     };
 
-    //Função carregar dados do localStorage ao inicializar
-    useEffect(() => {
-        const savedAuth = localStorage.getItem('authData');
-        if (savedAuth) {
-            try {
-                const authData = JSON.parse(savedAuth);
-                if (authData.isLoggedIn && authData.user) {
-                    console.log('Usuário restaurado do localStorage:', authData.user);
-                    // Aqui você pode definir um estado global ou callback para informar que o usuário está logado
-                    // Por exemplo: onUserLoggedIn?.(authData.user);
-                }
-            } catch (error) {
-                console.error('Erro ao ler localStorage:', error);
-                localStorage.removeItem('authData');
-            }
-        }
-    }, []);
-
     // Carregar dados do localStorage ao inicializar
     useEffect(() => {
+        console.log('🔍 Verificando localStorage...');
         const savedAuth = localStorage.getItem('authData');
+
         if (savedAuth) {
             try {
                 const authData = JSON.parse(savedAuth);
                 if (authData.isLoggedIn && authData.user) {
-                    console.log('Usuário restaurado do localStorage:', authData.user);
+
+                    // VERIFICAR SE NÃO ESTÁ MUITO ANTIGO (30 dias)
+                    const savedTime = new Date(authData.timestamp);
+                    const now = new Date();
+                    const daysPassed = (now - savedTime) / (1000 * 60 * 60 * 24);
+
+                    if (daysPassed > 30) {
+                        console.log('⚠️ Login expirado após 30 dias, removendo...');
+                        localStorage.removeItem('authData');
+                        return;
+                    }
+
+                    // RENOVAR TIMESTAMP (manter ativo)
+                    const renewedData = {
+                        ...authData,
+                        timestamp: new Date().toISOString(),
+                        lastAccess: new Date().toISOString()
+                    };
+                    localStorage.setItem('authData', JSON.stringify(renewedData));
+
+                    console.log('✅ Usuário restaurado e renovado:', authData.user);
                     // Aqui você pode definir um estado global ou callback para informar que o usuário está logado
                     // Por exemplo: onUserLoggedIn?.(authData.user);
                 }
@@ -263,6 +267,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                 console.error('Erro ao ler localStorage:', error);
                 localStorage.removeItem('authData');
             }
+        } else {
+            console.log('❌ Nenhum dado encontrado no localStorage');
         }
     }, []);
 
@@ -271,6 +277,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         console.log('Logout realizado e localStorage limpo');
         // Aqui você pode chamar um callback: onUserLoggedOut?.();
     };
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -336,6 +343,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
         alert(`${message} realizado com sucesso!`);
         setIsOpen(false);
     };
+
     const handleForgotPassword = () => {
         setAuthMode('forgot-password');
     };
@@ -459,7 +467,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                 </div>
                             )}
 
-
                             {/* Campo Usuário - apenas no registro */}
                             {isRegister && (
                                 <div>
@@ -473,7 +480,6 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                                     />
                                 </div>
                             )}
-
 
                             {/* Campo E-mail */}
                             <div>
