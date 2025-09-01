@@ -1,0 +1,76 @@
+// utils/dataMappers.js
+
+/**
+ * Transforma os dados da MockAPI para o formato esperado pelo front-end
+ * @param {Object} apiNoticia - Dados da notícia vindos da API
+ * @param {number} index - Índice para gerar ID único
+ * @returns {Object} - Dados transformados para o front-end
+ */
+export function transformNewsData(apiNoticia, index) {
+  return {
+    id: index + 1, // Gera ID baseado no índice
+    titulo: apiNoticia.titulo,
+    texto: apiNoticia.texto,
+    imagem: apiNoticia.imagem,
+    // Campos extras que podem ser úteis
+    autor: 'Redação', // Valor padrão
+    data: new Date().toLocaleDateString('pt-BR'),
+    resumo: apiNoticia.texto.substring(0, 150) + '...', // Cria um resumo
+    categoria: 'Gaming', // Categoria padrão baseado no conteúdo
+  };
+}
+
+/**
+ * Função para mapear múltiplas notícias
+ * @param {Array} apiNews - Array de notícias da API
+ * @returns {Array} - Array de notícias transformadas
+ */
+export function transformMultipleNews(apiNews) {
+  if (!Array.isArray(apiNews)) {
+    console.warn('transformMultipleNews: esperado array, recebido:', typeof apiNews);
+    return [];
+  }
+
+  return apiNews.map((noticia, index) => transformNewsData(noticia, index));
+}
+
+/**
+ * Função para filtrar notícias por palavra-chave no título
+ * @param {Array} news - Array de notícias
+ * @param {string} keyword - Palavra-chave para filtrar
+ * @returns {Array} - Notícias filtradas
+ */
+export function filterNewsByKeyword(news, keyword) {
+  if (!keyword || keyword.trim() === '') {
+    return news;
+  }
+
+  return news.filter(noticia => 
+    noticia.titulo.toLowerCase().includes(keyword.toLowerCase()) ||
+    noticia.texto.toLowerCase().includes(keyword.toLowerCase())
+  );
+}
+
+/**
+ * Função para ordenar notícias (se você quiser implementar ordenação)
+ * @param {Array} news - Array de notícias
+ * @param {string} sortBy - Campo para ordenar ('titulo', 'data', etc.)
+ * @param {string} order - 'asc' ou 'desc'
+ * @returns {Array} - Notícias ordenadas
+ */
+export function sortNews(news, sortBy = 'titulo', order = 'asc') {
+  return [...news].sort((a, b) => {
+    let valueA = a[sortBy];
+    let valueB = b[sortBy];
+
+    if (typeof valueA === 'string') {
+      valueA = valueA.toLowerCase();
+      valueB = valueB.toLowerCase();
+    }
+
+    if (order === 'desc') {
+      return valueA < valueB ? 1 : valueA > valueB ? -1 : 0;
+    }
+    return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
+  });
+}
