@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/autoplay';
 
 * {
     transition: background-color 0.2s ease, color 0.2s ease;
