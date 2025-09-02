@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from 'react';
-
+import GameCards from '../components/GamesCards';
 export default function Games() {
 
   useEffect(() => {
@@ -255,6 +255,7 @@ export default function Games() {
           <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-4 sm:mb-6 md:mb-8 lg:mb-10 text-black dark:text-white leading-relaxed font-sans px-1 sm:px-2">
             Mergulhe em um ARPG roguelite desafiador que combina ação intensa e narrativa envolvente.
           </p>
+         
         </div>
 
         {/* Video Container */}
@@ -378,6 +379,9 @@ export default function Games() {
             </div>
           )}
         </div>
+        
+        
+       
       </main>
 
       {/* Story Section */}
@@ -385,7 +389,7 @@ export default function Games() {
         <div className="max-w-xs sm:max-w-lg md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-4 sm:gap-6 md:gap-8 lg:gap-12">
           {/* Text Content */}
           <div className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl flex-1 font-bold text-black dark:text-white order-2 lg:order-1 px-2 sm:px-0">
-            <p className="leading-relaxed mb-3 sm:mb-4 md:mb-6">
+            <p className="leading-relaxed mb- sm:mb-4 md:mb-6">
               Em Hell Clock, você assume o papel de Pajeú, um ex-escravo e guerreiro destemido, determinado a resgatar seu mentor, Antônio Conselheiro, das forças sobrenaturais que assolam a região. Este jogo oferece uma experiência única ao combinar elementos de ARPG com mecânicas de roguelite, proporcionando combates intensos e desafiadores.
             </p>
             <p className="leading-relaxed">
@@ -402,34 +406,67 @@ export default function Games() {
             />
           </div>
         </div>
+        
       </div>
+      <div className='min-h-screen bg-gradient-to-r from-purple-400 to-purple-600 dark:bg-gradient-to-br dark:from-black'>
+        <div className='bg-gradient-to-r from-purple-400 to-purple-600 dark:bg-gradient-to-br dark:from-black'>
+          <section className="mb-20 mr-56 ml-56 bg-gradient-to-r from-purple-200 to-purple-400 text-purple-800 dark:bg-gradient-to-r dark:from-purple-950 dark:via-purple-700 dark:to-purple-800 py-16 px-8 rounded-xl">
+  <h2 className="text-3xl font-bold text-center text-gray-800 mb-12 dark:text-green-400">
+    Recursos do Jogo
+  </h2>
 
-      {/* Other Games Section */}
-      <div className="flex flex-col items-center text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl min-h-screen bg-white text-purple-700 dark:bg-gradient-to-br dark:from-black dark:via-purple-700 dark:to-purple-950 font-bold p-3 sm:p-4 md:p-8 lg:p-12 xl:p-20 mt-[-30px] sm:mt-[-50px] md:mt-[-80px] lg:mt-[-100px] xl:mt-[-130px] dark:text-green-500">
-        <h1 className="text-center mt-[-10px] sm:mt-[-15px] md:mt-[-20px] lg:mt-[-25px] xl:mt-[-30px] px-2 sm:px-4">
-          Explore também outros trabalhos incríveis!
-        </h1>
-        <div className="mt-6 sm:mt-8 md:mt-12 lg:mt-16 xl:mt-20 grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2 md:gap-4 lg:gap-6 rounded-lg w-full max-w-xs sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl">
-          <a href="https://www.horizonchaseturbo.com/pt-br" className="block hover:scale-105 transition-transform duration-300">
-            <img src="/images/Horizon Chase Turbo.webp" alt="Horizon Chase Turbo" className="w-full h-auto p-1 sm:p-2 md:p-4 lg:p-6 xl:p-10 mx-auto rounded-lg" />
-          </a>
-          <a href="https://blog.studiominiboss.com/games/outtheresomewhere.html" className="block hover:scale-105 transition-transform duration-300">
-            <img src="/images/download (12).webp" alt="Out There Somewhere" className="w-full h-auto p-1 sm:p-2 md:p-4 lg:p-6 xl:p-10 mx-auto rounded-lg" />
-          </a>
-          <a href="https://www.bombservice.com" className="block hover:scale-105 transition-transform duration-300">
-            <img src="/images/momodora.webp" alt="Momodora" className="w-full h-auto p-1 sm:p-2 md:p-4 lg:p-6 xl:p-10 mx-auto rounded-lg" />
-          </a>
-          <a href="https://alendadoheroi.com.br" className="block hover:scale-105 transition-transform duration-300">
-            <img src="/images/a-lenda-do-héroi.webp" alt="A Lenda do Herói" className="w-full h-auto p-1 sm:p-2 md:p-4 lg:p-6 xl:p-10 mx-auto rounded-lg" />
-          </a>
-          <a href="https://www.bombservice.com" className="block hover:scale-105 transition-transform duration-300">
-            <img src="/images/minoria.webp" alt="Minoria" className="w-full h-auto p-1 sm:p-2 md:p-4 lg:p-6 xl:p-10 mx-auto rounded-lg" />
-          </a>
-          <a href="https://www.coffeeaddictstudio.com" className="block hover:scale-105 transition-transform duration-300">
-            <img src="/images/hazel.webp" alt="Hazel" className="w-full h-auto p-1 sm:p-2 md:p-4 lg:p-6 xl:p-10 mx-auto rounded-lg" />
-          </a>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    {/* Card 1 */}
+    <div className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition">
+      <div className="text-purple-600 mb-4 text-5xl">⚔️</div>
+      <h3 className="text-xl font-semibold mb-2">Ação intensa</h3>
+      <p className="text-gray-800 font-medium">
+        Atravesse perigosas masmorras e utilize poderes sobrehumanos numa versão de fantasia sombria da Guerra de Canudos no Brasil.
+      </p>
+    </div>
+
+    {/* Card 2 */}
+    <div className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition">
+      <div className="text-purple-600 mb-4 text-5xl">🌌</div>
+      <h3 className="text-xl font-semibold mb-2">Mundo imersivo</h3>
+      <p className="text-gray-800 font-medium">
+        Cada segundo conta quando você enfrenta as legiões de mortos-vivos de seus opressores. Arrisque descer mais fundo para conseguir tesouros poderosos e desafiar os pesadelos encarnados daqueles que tentaram enterrar a verdade.
+      </p>
+    </div>
+
+    {/* Card 3 */}
+    <div className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition">
+      <div className="text-purple-600 mb-4 text-5xl">🎮</div>
+      <h3 className="text-xl font-semibold mb-2">RPG Singleplayer</h3>
+      <p className="text-gray-800 font-medium">
+        Crie poderosas builds com muito loot nessa combinação incrível de Roguelike e ARPG.
+      </p>
+    </div>
+      <div className="col-span-3 flex justify-center mt-6">
+    <a
+      href="https://store.steampowered.com/app/1782460/Hell_Clock/"
+      className="px-6 py-3 bg-gradient-to-r from-green-500 via-green-600 to-green-700 
+               text-white font-bold rounded-xl shadow-lg transition 
+               transform hover:scale-110 hover:shadow-2xl 
+               hover:from-green-400 hover:via-green-500 hover:to-green-600
+               relative overflow-hidden group"
+    >
+      Jogar Agora
+    </a>
+  </div>
+    
+  </div>
+</section>
+
+ <GameCards />
         </div>
-      </div>
+      
+        
+</div>
+
+  
     </div>
   );
 }
+
+
