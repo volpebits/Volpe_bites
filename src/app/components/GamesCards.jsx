@@ -6,13 +6,14 @@ export default function GameCards() {
   const [selectedGame, setSelectedGame] = useState(null);
 
   return (
-    <div className="relative from-purple-400 to-purple-600  dark:from-black dark:via-purple-700 dark:to-purple-950">
-      <h1 className="text-3xl font-bold text-center text-green-400 mb-12 dark:text-green-400">
-        Conheça Outros Jogos Brasileiros!
-      </h1>
+    <div className="relative bg-gradient-to-r from-purple-400 to-purple-600 dark:bg-gradient-to-r dark:from-purple-950">
+      <section className="bg-gradient-to-r from-purple-400 to-purple-600 dark:bg-gradient-to-r dark:from-purple-950 py-10 min-h-screen">
+        {/* Título centralizado */}
+        <h1 className="text-3xl font-bold text-center text-green-400 mb-12 dark:text-green-400">
+          Conheça Outros Jogos Brasileiros!
+        </h1>
 
-      {/* Grid de cards */}
-      <section className="bg-gradient-to-r from-purple-400 to-purple-600 dark:bg-gradient-to-br dark:from-black dark:via-purple-700 dark:to-purple-950 py-10 min-h-screen">
+        {/* Grid de cards */}
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-20">
           {gamesData.map((game) => (
             <div
@@ -64,7 +65,6 @@ export default function GameCards() {
             </h2>
             <p className="text-gray-200 mt-2">{selectedGame.description}</p>
 
-            {/* Botão Jogar Agora */}
             {selectedGame.link && (
               <a
                 href={selectedGame.link}

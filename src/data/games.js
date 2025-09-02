@@ -63,6 +63,39 @@ const gamesData = [
     image: "/images/header.jpg",
     link: "https://mars2120.com/",
   },
+  {
+    id: 9,
+    title: "Enigma do Medo",
+    description:
+      "Se torne Mia, uma detetive paranormal buscando por seu pai que desapareceu. Investigue e desvende os mistérios do Enigma do Medo, derrotando monstros assustadores em seu caminho.",
+    image: "/images/enigma_do_medo.jpg",
+    link: "https://store.steampowered.com/app/1507580/Enigma_do_Medo/",
+  },
+  {
+    id: 10,
+    title: "Mullet Madjack",
+    description:
+      "Um jogo de tiro em primeira pessoa frenético de um jogador onde você está dentro de um anime da era dos vídeo cassetes! Incremente seu personagem até você alcançar o último andar.",
+    image: "/images/mullet_madjack.jpg",
+    link: "https://store.steampowered.com/app/2111190/MULLET_MADJACK/",
+  },
+  {
+    id: 11,
+    title: "Chroma Squad",
+    description:
+      "Um RPG tático sobre cinco dublês que decidem produzir o próprio seriado inspirado em tokusatsu. Treine, lute e crie sua própria temporada de heróis coloridos!",
+    image: "/images/chroma_squad.jpg",
+    link: "https://store.steampowered.com/app/251130/Chroma_Squad/",
+  },
+   {
+    id: 12,
+    title: "Pipistrello and the Cursed Yoyo",
+    description:
+      "Vai encarar o primeiro Yoyovania?! Nesta aventura 2D top-down, você vai explorar um cenário urbano gigante, reinterpretando seus arredores por meio de sua maestria com o ioiô.",
+    image: "/images/cursed_yoyo.jpg",
+    link: "https://store.steampowered.com/app/2870350/Pipistrello_and_the_Cursed_Yoyo/",
+  },
 ];
+
 
 export default gamesData;
