@@ -1,5 +1,3 @@
-import Image from "next/image";
-import Carousel from "./components/carousel";
 import FloatingCreatorsCarousel from "./components/creators";
 import NoticiasHome from "./components/news_home";
 import GamesHome from "./components/games_home";
@@ -8,12 +6,6 @@ export const metadata = {
 };
 
 export default function Home() {
-  const carouselImages = [
-    "/images/MARS 2120.webp",
-    "/images/minoria.webp",
-    "/images/hazel.webp",
-  ];
-
   return (
     <div className="content">
       <div className="bg-gradient-to-br py-6 space-y-6 from-white via-purple-400 to-purple-950 dark:bg-gradient-to-br dark:from-black dark:via-purple-700 dark:to-purple-950 w-full">
