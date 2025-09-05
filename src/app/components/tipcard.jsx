@@ -24,7 +24,7 @@ export function TipCard() {
         desconto até meia-noite.
       </p>
 
-      <button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-xl transition">
+      <button className="w-full px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl shadow-md transition active:scale-95">
         Ver Promoções
       </button>
     </div>
