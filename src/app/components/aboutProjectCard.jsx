@@ -70,7 +70,7 @@ export function AboutProjectCard() {
 
           {/* Ir para página de feedback */}
           <a
-            href="/feedback"
+            href="/avalienos"
             className="px-6 py-3 bg-white text-purple-700 font-bold rounded-xl shadow-md hover:bg-gray-100 transition active:scale-95"
           >
             ✍️ Avalie-nos Detalhadamente
