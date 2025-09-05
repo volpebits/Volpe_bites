@@ -52,7 +52,7 @@ const gamesData = [
     title: "Dandara",
     description:
       "O mundo de Salt está à beira de um colapso. Os cidadãos, que um dia foram espíritos livres, agora estão oprimidos e isolados. Mas nem tudo está perdido. Desta atmosfera de medo surge um heroína, um raio de esperança. Seu nome é Dandara.",
-    image: "/images/dandara.webp",
+    image: "/images/Dandara.webp",
     link: "https://store.steampowered.com/app/612390/Dandara/",
   },
   {
