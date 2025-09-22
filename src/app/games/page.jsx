@@ -2,13 +2,14 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import gamesData from "../../data/games.js";
+import GamesHome from "../components/games_home.jsx";
 
 export default function GamesLayout() {
   const [search, setSearch] = useState("");
   const [selectedGame, setSelectedGame] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const itemsPerPage = 3; 
+  const itemsPerPage = 3;
   const totalPages = Math.ceil(gamesData.slice(0, 8).length / itemsPerPage);
 
   const nextSlide = () => {
@@ -24,65 +25,28 @@ export default function GamesLayout() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-purple-400 via-purple-500 to-purple-500 dark:bg-gradient-to-b dark:from-purple-700 dark:via-purple-800 dark:to-purple-950 text-white">
-      <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-10">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b bg-white dark:bg-gradient-to-b dark:from-purple-700 dark:via-purple-800 dark:to-purple-950 text-white">
+      <main className="flex-1 max-w-7xl mx-auto w-full py-8 space-y-8">
         {/* Jogos mais populares */}
-        <section className="mb-12 relative">
-          <h2 className="text-2xl font-bold mb-6 text-center">
+        <section className="relative space-y-8">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-purple-800 text-center dark:text-green-500">
             Jogos mais populares
           </h2>
-          <div className="flex items-center justify-center">
-            {/* Botão esquerda */}
-            <button
-              onClick={prevSlide}
-              className="absolute left-0 bg-purple-900 p-2 rounded-full shadow-lg hover:bg-purple-700"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            {/* Área do carrossel */}
-            <div className="flex gap-6 overflow-hidden w-full justify-center">
-              {gamesData
-                .slice(
-                  currentIndex * itemsPerPage,
-                  currentIndex * itemsPerPage + itemsPerPage
-                )
-                .map((game) => (
-                  <div
-                    key={game.id}
-                    className="min-w-[200px] bg-white text-black rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer"
-                    onClick={() => setSelectedGame(game)}
-                  >
-                    <img
-                      src={game.image}
-                      alt={game.title}
-                      className="h-32 w-full object-cover"
-                    />
-                    <div className="p-3">
-                      <h3 className="font-semibold">{game.title}</h3>
-                    </div>
-                  </div>
-                ))}
-            </div>
-
-            {/* Botão direita */}
-            <button
-              onClick={nextSlide}
-              className="absolute right-0 bg-purple-900 p-2 rounded-full shadow-lg hover:bg-purple-700"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
+          <GamesHome />
         </section>
 
+        <h2 className="text-3xl pb-4 text-center md:text-4xl lg:text-5xl font-bold text-purple-800 dark:text-green-500">
+          Todos os jogos
+        </h2>
+
         {/* Pesquisa */}
-        <div className="mb-8">
+        <div className="">
           <input
             type="text"
             placeholder="Pesquisar jogo..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full p-3 rounded-lg text-black outline-none"
+            className="w-full p-4 pl-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-purple-600 transition-colors shadow-lg"
           />
         </div>
 
@@ -115,20 +79,23 @@ export default function GamesLayout() {
               alt="Hell Clock"
               className="w-full h-48 object-cover rounded-md"
             />
-            <h3 className="text-lg font-semibold mt-4">🎯 Jogo Destaque do Mês</h3>
+            <h3 className="text-lg font-semibold mt-4">
+              🎯 Jogo Destaque do Mês
+            </h3>
             <h4 className="text-md font-bold mt-2">Hell Clock</h4>
             <p className="text-sm mt-2 flex-1 font-medium">
-              No século XIX, um capítulo nefasto da história Brasileira aconteceu
-              no sertão. O povoado de Canudos havia se tornado um santuário para
-              milhares que buscavam refúgio. Mas quando desafiaram o recém-formado
-              Exército Republicano, sua resistência foi enfrentada com força
-              desproporcional. 25,000 homens, mulheres e crianças foram massacrados.
+              No século XIX, um capítulo nefasto da história Brasileira
+              aconteceu no sertão. O povoado de Canudos havia se tornado um
+              santuário para milhares que buscavam refúgio. Mas quando
+              desafiaram o recém-formado Exército Republicano, sua resistência
+              foi enfrentada com força desproporcional. 25,000 homens, mulheres
+              e crianças foram massacrados.
               <br />
-              Jogue como Pajéu, um guerreiro que conquistou sua liberdade em batalha,
-              lutando para resgatar a alma de Conselheiro - seu mentor e líder
-              espiritual de Canudos. A cada descida, o tempo volta, e seus poderes
-              aumentam ao enfrentar terrores cada vez mais perigosos.
-              {" "}
+              Jogue como Pajéu, um guerreiro que conquistou sua liberdade em
+              batalha, lutando para resgatar a alma de Conselheiro - seu mentor
+              e líder espiritual de Canudos. A cada descida, o tempo volta, e
+              seus poderes aumentam ao enfrentar terrores cada vez mais
+              perigosos.{" "}
               <a
                 href="https://www.youtube.com/watch?v=98qWEGUjFS8"
                 target="_blank"

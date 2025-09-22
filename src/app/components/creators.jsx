@@ -122,17 +122,17 @@ const FloatingCreatorsCarousel = () => {
                       className="w-15 h-15 rounded-full border-2 border-white/30"
                     />
                     <div>
-                      <h3 className="text-white font-bold text-lg">
+                      <h3 className="text-black dark:text-white font-bold text-lg">
                         {creator.name}
                       </h3>
-                      <p className="text-purple-200 text-sm font-medium">
+                      <p className="text-purple-700 dark:text-purple-200 text-sm font-medium">
                         {creator.role}
                       </p>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-white/90 text-sm leading-relaxed">
+                  <p className="text-black dark:text-white  text-sm leading-relaxed">
                     {creator.description}
                   </p>
                 </div>

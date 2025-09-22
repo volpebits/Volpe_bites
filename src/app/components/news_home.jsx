@@ -38,7 +38,7 @@ export default function NoticiasHome() {
               {maisAvaliadas.map((noticia) => (
                 <SwiperSlide key={noticia.id}>
                   <Link href={`/news/${noticia.id}`} className="block">
-                    <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-xl overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer">
+                    <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg border-2 border-purple-900 dark:border-0 overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer">
                       <img
                         src={noticia.imagem}
                         alt={noticia.titulo}
@@ -68,7 +68,7 @@ export default function NoticiasHome() {
             </Swiper>
 
             {/* Botões de navegação customizados */}
-            <div className="swiper-button-prev-mais-avaliadas absolute z-10 top-1/2 -left-2 md:-left-14 -translate-y-1/2 cursor-pointer p-2 md:p-3 rounded-full hover:bg-black/70 transition-colors flex items-center justify-center text-white text-lg">
+            <div className="swiper-button-prev-mais-avaliadas absolute z-10 top-1/2 -left-2 md:-left-10 -translate-y-1/2 cursor-pointer p-2 md:p-3 transition-colors flex items-center justify-center text-black dark:text-white text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -84,7 +84,7 @@ export default function NoticiasHome() {
                 />
               </svg>
             </div>
-            <div className="swiper-button-next-mais-avaliadas absolute z-10 top-1/2 -right-2 md:-right-14 -translate-y-1/2 cursor-pointer p-2 md:p-3 rounded-full hover:bg-black/70 transition-colors flex items-center justify-center text-white text-lg">
+            <div className="swiper-button-next-mais-avaliadas absolute z-10 top-1/2 -right-2 md:-right-10 -translate-y-1/2 cursor-pointer p-2 md:p-3 transition-colors flex items-center justify-center text-black dark:text-white text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

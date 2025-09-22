@@ -6,13 +6,14 @@ import { TipCard } from "./components/tipcard";
 import { TopGamesCard } from "./components/topgames";
 import { CommunityCard } from "./components/CommunityCard";
 import { AboutProjectCard } from "./components/aboutProjectCard";
+import { TopUsersCard } from "./components/userRanking";
 
 export const metadata = { title: "Home" };
 
 export default function Home() {
   return (
     <div className="content">
-      <div className="bg-gradient-to-br pt-6 space-y-12 from-white via-purple-400 to-purple-950 dark:bg-gradient-to-br dark:from-black dark:via-purple-700 dark:to-purple-950 w-full">
+      <div className="bg-gradient-to-br pt-6 space-y-12 bg-white dark:bg-gradient-to-br dark:from-black dark:via-purple-700 dark:to-purple-950 w-full">
         {/* --- BLOCO DE NOTÍCIAS + SIDEBAR --- */}
         <div className="content w-11/12 md:w-10/12 lg:w-8/12 mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
@@ -23,13 +24,15 @@ export default function Home() {
             </aside>
 
             {/* Conteúdo principal */}
-            <section className="text-center space-y-6 lg:col-span-3">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-green-500">
-                Notícias mais recentes
-              </h2>
-              <p className="text-lg md:text-2xl lg:text-3xl font-bold text-white">
-                Veja as principais atualizações sobre o mundo gamer.
-              </p>
+            <section className="text-center flex flex-col justify-between lg:col-span-3">
+              <div className="space-y-6">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-purple-800 dark:text-green-500">
+                  Notícias mais recentes
+                </h2>
+                <p className="text-lg md:text-2xl lg:text-3xl font-bold text-black dark:text-white">
+                  Veja as principais atualizações sobre o mundo gamer.
+                </p>
+              </div>
               <NoticiasHome />
               <div className="flex justify-center">
                 <a
@@ -43,8 +46,9 @@ export default function Home() {
           </div>
 
           {/* --- CARD EXTRA ENTRE AS SEÇÕES --- */}
-          <div className="mt-10">
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-[1fr,auto] gap-4">
             <CommunityCard />
+            <TopUsersCard />
           </div>
 
           {/* --- BLOCO DE JOGOS --- */}
@@ -52,10 +56,10 @@ export default function Home() {
             {/* Conteúdo principal */}
             <section className="lg:col-span-3 space-y-6">
               <div className="text-center">
-                <h2 className="pb-3 text-3xl md:text-4xl lg:text-5xl font-bold text-green-500">
+                <h2 className="pb-3 text-3xl md:text-4xl lg:text-5xl font-bold text-purple-800 dark:text-green-500">
                   Jogos nacionais
                 </h2>
-                <p className="text-lg md:text-2xl lg:text-3xl font-bold text-white">
+                <p className="text-lg md:text-2xl lg:text-3xl font-bold text-black dark:text-white">
                   Tenha acesso aos principais jogos desenvolvidos no Brasil!
                 </p>
               </div>
@@ -77,23 +81,23 @@ export default function Home() {
           </div>
         </div>
 
+        {/* --- CARD SOBRE O PROJETO + AVALIAÇÃO --- */}
+        <div class="w-8/12 mx-auto">
+          <AboutProjectCard />
+        </div>
+
         {/* --- BLOCO DE CRIADORES --- */}
         <div className="space-y-6 mt-12">
           <div className="text-center">
-            <h2 className="pb-3 text-3xl md:text-4xl lg:text-5xl font-bold text-green-500">
+            <h2 className="pb-3 text-3xl md:text-4xl lg:text-5xl font-bold text-purple-800 dark:text-green-500">
               Por trás dos Controles
             </h2>
-            <p className="text-lg md:text-2xl lg:text-3xl font-bold text-white">
+            <p className="text-lg md:text-2xl lg:text-3xl font-bold text-black dark:text-white">
               As mentes brilhantes que estão redefinindo o que significa criar
               jogos no Brasil.
             </p>
           </div>
           <FloatingCreatorsCarousel />
-        </div>
-
-        {/* --- CARD SOBRE O PROJETO + AVALIAÇÃO --- */}
-        <div>
-          <AboutProjectCard />
         </div>
       </div>
     </div>

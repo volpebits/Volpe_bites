@@ -13,7 +13,7 @@ export function TipCard() {
     <div
       className={`transition-all duration-700 ease-out transform ${
         visible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-5"
-      } w-full bg-purple-900/40 text-white rounded-2xl shadow-lg p-4`}
+      } w-full bg-gradient-to-r from-purple-700 via-purple-500 to-purple-700 text-white rounded-2xl shadow-lg p-4`}
     >
       <h2 className="text-lg font-bold flex items-center gap-2 mb-4">
         💡 Dica do Dia

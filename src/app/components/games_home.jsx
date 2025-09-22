@@ -37,7 +37,7 @@ export default function GamesHome() {
               {jogos.map((games) => (
                 <SwiperSlide key={games.id} className="h-auto flex">
                   {/* Adicionado: h-auto flex */}
-                  <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-xl overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer flex flex-col w-full">
+                  <div className="bg-white dark:bg-gray-800 text-black dark:text-white border-2 border-purple-900 dark:border-0 rounded-lg overflow-hidden transition-transform duration-300 hover:scale-105 cursor-pointer flex flex-col w-full">
                     {/* Adicionado: flex flex-col w-full */}
                     <img
                       src={games.image}
@@ -74,7 +74,7 @@ export default function GamesHome() {
             `}</style>
 
             {/* Botões de navegação customizados */}
-            <div className="swiper-button-prev-mais-avaliadas absolute z-10 top-1/2 -left-2 md:-left-14 -translate-y-1/2 cursor-pointer p-2 md:p-3 rounded-full hover:bg-black/70 transition-colors flex items-center justify-center text-white text-lg">
+            <div className="swiper-button-prev-mais-avaliadas absolute z-10 top-1/2 -left-2 md:-left-10 -translate-y-1/2 cursor-pointer p-2 md:p-3 transition-colors flex items-center justify-center text-black dark:text-white text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -90,7 +90,7 @@ export default function GamesHome() {
                 />
               </svg>
             </div>
-            <div className="swiper-button-next-mais-avaliadas absolute z-10 top-1/2 -right-2 md:-right-14 -translate-y-1/2 cursor-pointer p-2 md:p-3 rounded-full hover:bg-black/70 transition-colors flex items-center justify-center text-white text-lg">
+            <div className="swiper-button-next-mais-avaliadas absolute z-10 top-1/2 -right-2 md:-right-10 -translate-y-1/2 cursor-pointer p-2 md:p-3 transition-colors flex items-center justify-center text-black dark:text-white text-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
