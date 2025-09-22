@@ -69,7 +69,7 @@ export default function NewsPage() {
         <h2 className="text-3xl text-center md:text-4xl lg:text-5xl font-bold text-purple-800 dark:text-green-500">
           Notícias Mais Avaliadas
         </h2>
-        <div className="relative mb-16 px-8 md:px-0">
+        <div className="relative">
           <Swiper
             modules={[Autoplay, Navigation]}
             spaceBetween={2} // Reduzido o espaçamento entre os cards
