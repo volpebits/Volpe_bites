@@ -53,27 +53,34 @@ export default function GamesLayout() {
         {/* Grid de jogos */}
         <section className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Todos os jogos */}
-          <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-6">
-            {filteredGames.map((game) => (
-              <div
-                key={game.id}
-                className="bg-white text-black rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer"
-                onClick={() => setSelectedGame(game)}
-              >
-                <img
-                  src={game.image}
-                  alt={game.title}
-                  className="h-32 w-full object-cover"
-                />
-                <div className="p-3">
-                  <h3 className="font-semibold">{game.title}</h3>
+          <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-6 items-start">
+            {filteredGames.length > 0 ? (
+              filteredGames.map((game) => (
+                <div
+                  key={game.id}
+                  className="bg-white text-black rounded-lg shadow-md overflow-hidden hover:scale-105 transition cursor-pointer h-auto"
+                  onClick={() => setSelectedGame(game)}
+                >
+                  <img
+                    src={game.image}
+                    alt={game.title}
+                    className="h-32 w-full object-cover"
+                  />
+                  <div className="p-3">
+                    <h3 className="font-bold text-purple-800 dark:text-green-500">
+                      {game.title}
+                    </h3>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-500 col-span-full text-center">
+                Nenhum jogo encontrado.
+              </p>
+            )}
           </div>
-
-          {/* Jogo destaque do mês: Hell Clock */}
-          <div className="bg-white text-black rounded-lg shadow-lg p-4 flex flex-col">
+          {/* Jogo destaque do mês */}
+          <div className="bg-white text-black rounded-lg shadow-lg p-4 flex flex-col h-fit">
             <img
               src="/images/HellClock2.png"
               alt="Hell Clock"
