@@ -326,12 +326,12 @@ export default function SettingsModal({ isOpen, onClose }) {
                         description:
                           "Minimiza animações e efeitos de movimento",
                       },
-                      {
-                        key: "vlibras",
-                        label: "VLibras - Tradução para Libras",
-                        description:
-                          "Ativa o widget de tradução em Libras (Língua Brasileira de Sinais)",
-                      },
+                      // {
+                      //   key: "vlibras",
+                      //   label: "VLibras - Tradução para Libras",
+                      //   description:
+                      //     "Ativa o widget de tradução em Libras (Língua Brasileira de Sinais)",
+                      // },
                       {
                         key: "screenReader",
                         label: "Otimizar para leitores de tela",
