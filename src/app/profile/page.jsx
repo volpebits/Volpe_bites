@@ -91,7 +91,7 @@ function createDefaultProfile() {
     achievementsCount: 0,
     gamesCount: 0,
     totalPlaytimeHours: 0,
-    memberSince: today.toISOString().slice(0, 10),
+    memberSince: new Date().toISOString().slice(0,10),
     recentGames: [],
   };
 }
@@ -463,7 +463,7 @@ const UserProfilePage = () => {
         <div className="flex items-start gap-8 mb-8">
           <div className="flex items-start gap-6">
             <div className="relative">
-              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-600 dark:border-gray-300 bg-gray-700 dark:bg-gray-200 mb-4">
+              <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-700 mb-4">
                 {profileData.avatar ? (
                   <img src={profileData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
@@ -509,14 +509,17 @@ const UserProfilePage = () => {
           <div className="flex gap-3 ml-auto">
             <button
               onClick={handleEditProfile}
-              className="flex items-center gap-2 bg-purple-600 dark:bg-green-500 text-white px-6 py-3 rounded-lg font-medium"
+              className="bg-purple-600 dark:bg-green-500 hover:bg-purple-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-400 dark:hover:shadow-green-400 flex items-center gap-2"
             >
               <Edit3 className="w-4 h-4" aria-hidden />
               Editar Perfil
             </button>
+
+
+
             <button
               onClick={() => window.history.back()}
-              className="text-black dark:text-gray-100 hover:text-white font-bold px-4 py-3"
+              className="text-black dark:text-white hover:text-purple-600 dark:hover:text-green-400 font-bold px-4 py-3"
             >
               Voltar
             </button>
@@ -731,7 +734,7 @@ const UserProfilePage = () => {
                           setTempProfileData((prev) => ({ ...prev, newGenre: "" }));
                         }
                       }}
-                      className="bg-purple-600 hover:bg-purple-700 dark:bg-green-500 dark:hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                      className="bg-purple-600 dark:bg-green-500 hover:bg-purple-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-400 dark:hover:shadow-green-400"
                     >
                       Adicionar
                     </button>
@@ -792,7 +795,7 @@ const UserProfilePage = () => {
                 </h3>
                 {!Array.isArray(completedMissions) || completedMissions.length === 0 ? (
                   <div className="bg-white dark:bg-purple-900/30 backdrop-blur-sm rounded-xl p-8 border border-purple-900/80 text-center">
-                    <Trophy className="w-16 h-16 text-green-400 mx-auto mb-4 font-semibold" />
+                    <Trophy className="w-16 h-16 text-purple-700 dark:text-green-400 mx-auto mb-4 font-semibold" />
                     <h4 className="text-black dark:text-white font-semibold text-xl mb-2">
                       Nenhuma conquista ainda
                     </h4>
@@ -891,10 +894,10 @@ const UserProfilePage = () => {
           </div>
 
           {/* Lado Direito - Onboarding OU Missões */}
-          <div className="w-80">
+          <div className="w-80 ">
             {!onboarding.missionsUnlocked ? (
               <>
-                <h3 className="text-2xl font-bold text-purple-700 dark:text-green-400 mb-6">
+                <h3 className=" flex justify-center text-2xl font-bold text-purple-700 dark:text-green-400 mb-6">
                   Comece sua jornada
                 </h3>
                 <div className="space-y-4">
@@ -905,7 +908,7 @@ const UserProfilePage = () => {
                     </p>
                     <button
                       onClick={handleEditProfile}
-                      className="bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500 text-white px-4 py-2 rounded text-sm font-medium w-full transition-colors"
+                      className="mx-auto w-full flex justify-center bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500 text-white px-20 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-yellow-500 dark:hover:shadow-yellow-400"
                     >
                       Editar Perfil
                     </button>
@@ -933,7 +936,7 @@ const UserProfilePage = () => {
                         }));
                         updateOnboarding({ firstGamePlayed: true });
                       }}
-                      className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium w-full transition-colors"
+                      className="mx-auto w-full flex justify-center bg-purple-600 hover:bg-purple-700 text-white px-20 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-400 dark:hover:shadow-purple-600"
                     >
                       Explorar Jogos
                     </button>
@@ -949,7 +952,7 @@ const UserProfilePage = () => {
                     </p>
                     <button
                       disabled
-                      className="bg-green-600 text-white px-4 py-2 rounded text-sm font-medium w-full transition-colors cursor-not-allowed"
+                      className="mx-auto w-full flex justify-center bg-green-600 text-white px-24 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform cursor-not-allowed  hover:bg-green-500"
                     >
                       Ver Missões
                     </button>
@@ -967,7 +970,7 @@ const UserProfilePage = () => {
                   {dailyMissions.length > 0 && (
                     <button
                       onClick={regenerateAllMissions}
-                      className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                      className="transition transform hover:scale-105 bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
                       title="Trocar todas as missões (mantendo o XP necessário)"
                     >
                       <RefreshCw className="w-4 h-4 " aria-hidden />
@@ -1011,12 +1014,12 @@ const UserProfilePage = () => {
                           onClick={() => {
                             completeMission(mission.id);
                           }}
-                          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium flex-1 transition-colors"
+                          className="transition transform hover:scale-105 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium flex-1"
                         >
                           Concluir
                         </button>
                         <button
-                          className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium"
+                          className="transition transform hover:scale-105 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium"
                           onClick={() => setActiveTab("games")}
                         >
                           Ver Jogos
@@ -1073,7 +1076,7 @@ const UserProfilePage = () => {
                 </h2>
                 <button
                   onClick={handleCancelEdit}
-                  className="text-gray-500  hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  className="text-gray-700  hover:text-gray-500 dark:text-gray-200 dark:hover:text-gray-400"
                   aria-label="Fechar modal"
                 >
                   <X className="w-6 h-6" aria-hidden />
@@ -1083,7 +1086,7 @@ const UserProfilePage = () => {
               <div className="space-y-4">
                 {/* Avatar */}
                 <div className="flex flex-col items-center mb-6">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-600 dark:border-gray-300 bg-gray-700 dark:bg-gray-200 mb-4">
+                  <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-700 mb-4">
                     {tempProfileData.avatar ? (
                       <img src={tempProfileData.avatar} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
@@ -1156,10 +1159,6 @@ const UserProfilePage = () => {
                     placeholder="voce@exemplo.com"
                   />
                 </div>
-
-                <p className="text-xs text-black/60 dark:text-white/60">
-                  Dica: senha deve ser tratada no backend; não a salve em localStorage.
-                </p>
               </div>
 
               {/* Botões */}
@@ -1181,7 +1180,7 @@ const UserProfilePage = () => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
