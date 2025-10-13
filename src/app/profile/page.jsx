@@ -79,7 +79,7 @@ function resolveDescription(template) {
 
 // ✅ Cria um perfil default sempre que precisar
 function createDefaultProfile() {
-  const today = new Date();
+  const today = new Date(); // data e hora local
   return {
     name: "",
     about: "",
@@ -91,7 +91,7 @@ function createDefaultProfile() {
     achievementsCount: 0,
     gamesCount: 0,
     totalPlaytimeHours: 0,
-    memberSince: new Date().toISOString().slice(0,10),
+    memberSince: today.toString(), // salva data e hora local
     recentGames: [],
   };
 }
@@ -497,6 +497,7 @@ const UserProfilePage = () => {
 
               <div className="flex items-center gap-6 text-gray-400 text-sm">
                 <span className="flex items-center gap-1">
+
                   <Calendar className="text-black dark:text-white w-4 h-4" aria-hidden />
                   <span className="text-black dark:text-white" suppressHydrationWarning>
                     Membro desde {new Date(profileData.memberSince).toLocaleDateString("pt-BR")}

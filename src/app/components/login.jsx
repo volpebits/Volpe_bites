@@ -49,7 +49,7 @@ function makeUserRecord({ email, password = "", username = "", avatar = "" }) {
       achievementsCount: 0,
       gamesCount: 0,
       totalPlaytimeHours: 0,
-      memberSince: new Date().toISOString().slice(0, 10),
+      memberSince: new Date().toString(), // salva data e hora local
       recentGames: [],
       completedMissions: [],
     },
@@ -148,7 +148,7 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
     return () => {
       try {
         window.google?.accounts?.id?.cancel();
-      } catch {}
+      } catch { }
       timers.current.forEach(clearTimeout);
       timers.current = [];
     };
@@ -388,8 +388,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
     isLogin
       ? "Entrar"
       : isRegister
-      ? "Crie sua conta!"
-      : "Enviar link de recuperação";
+        ? "Crie sua conta!"
+        : "Enviar link de recuperação";
 
   return (
     <>
@@ -401,9 +401,8 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
       )}
 
       <div
-        className={`fixed inset-0 z-50 flex font-sans transition-transform duration-500 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed inset-0 z-50 flex font-sans transition-transform duration-500 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div
           className="w-0 md:w-1/2 bg-black/30 backdrop-blur-sm"
@@ -644,11 +643,10 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
                   type="button"
                   onClick={handleGoogleLogin}
                   disabled={!isGoogleLoaded}
-                  className={`w-full flex items-center justify-center gap-3 bg-white border-2 border-green-500 text-gray-700 py-4 rounded-full transition-all duration-300 hover:bg-gray-50 hover:shadow-md ${
-                    !isGoogleLoaded
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:scale-105"
-                  }`}
+                  className={`w-full flex items-center justify-center gap-3 bg-white border-2 border-green-500 text-gray-700 py-4 rounded-full transition-all duration-300 hover:bg-gray-50 hover:shadow-md ${!isGoogleLoaded
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:scale-105"
+                    }`}
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
                     <path

@@ -82,7 +82,7 @@ export default function Home() {
         </div>
 
         {/* --- CARD SOBRE O PROJETO + AVALIAÇÃO --- */}
-        <div class="w-8/12 mx-auto">
+        <div classname="w-8/12 mx-auto">
           <AboutProjectCard />
         </div>
 
