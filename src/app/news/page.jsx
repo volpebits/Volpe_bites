@@ -213,7 +213,7 @@ export default function NewsPage() {
               <div className="text-center mt-12">
                 <button
                   onClick={handleShowMore}
-                  className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300"
+                  className="bg-purple-600 hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-colors duration-300"
                 >
                   Mostrar +
                 </button>

@@ -116,7 +116,7 @@ export default function GamesLayout() {
               href="https://store.steampowered.com/app/123456/Hell_Clock/"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 bg-green-500 text-white py-2 px-4 rounded-lg text-center hover:bg-purple-800"
+              className="mt-4 bg-purple-600 text-white py-2 px-4 rounded-lg text-center hover:bg-purple-800"
             >
               Jogar Agora
             </a>
@@ -127,7 +127,7 @@ export default function GamesLayout() {
       {/* Card Valorização dos Jogos Nacionais */}
       <section className="w-full flex justify-center px-6 pb-16">
         <div className="max-w-3xl bg-white text-black rounded-2xl shadow-xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-purple-700 mb-4">
+          <h2 className="text-2xl font-bold text-purple-700 dark:text-green-500 mb-4">
             🎮 Valorização dos Jogos Nacionais
           </h2>
           <p className="text-gray-700 leading-relaxed">

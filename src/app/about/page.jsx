@@ -67,9 +67,9 @@ export default function About() {
 
           <div className="relative">
             {/* Badge decorativo */}
-            <div className="inline-flex items-center gap-2 bg-purple-900/30 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-400/20 mb-6">
+            <div className="inline-flex items-center gap-2 dark:bg-purple-900/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-400/20 dark:border-purple-800 mb-6">
               <span className="text-2xl animate-bounce">🚀</span>
-              <span className="text-purple-200 font-semibold">
+              <span className="text-purple-800 dark:text-purple-200 font-semibold">
                 Projeto Nacional
               </span>
               <span className="text-xl animate-pulse">✨</span>
@@ -87,7 +87,7 @@ export default function About() {
         {/* Seção de Descrição Melhorada */}
         <div className="relative max-w-5xl">
           {/* Card de fundo com glassmorphism */}
-          <div className="absolute inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-3xl border border-white/20"></div>
+          <div className="absolute inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-3xl border border-black/20 dark:border-white/20"></div>
 
           <div className="relative p-8 md:p-12">
             {/* Ícone decorativo */}
@@ -142,7 +142,7 @@ export default function About() {
 
         {/* Seção de Estatísticas */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-4xl">
-          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-6 border border-black/30 dark:border-white/20">
             <div className="text-4xl font-bold text-purple-600 dark:text-green-400">
               100%
             </div>
@@ -150,7 +150,7 @@ export default function About() {
               Jogos Brasileiros
             </div>
           </div>
-          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-6 border border-black/30 dark:border-white/20">
             <div className="text-4xl font-bold text-purple-600 dark:text-green-400">
               2024
             </div>
@@ -158,7 +158,7 @@ export default function About() {
               Fundado
             </div>
           </div>
-          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+          <div className="bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-2xl p-6 border border-black/30 dark:border-white/20">
             <div className="text-4xl font-bold text-purple-600 dark:text-green-400">
               4
             </div>
@@ -187,7 +187,7 @@ export default function About() {
             {developers.map((dev, index) => (
               <div key={index} className="group relative">
                 {/* Card de fundo */}
-                <div className="absolute inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-sm rounded-3xl border border-white/20 group-hover:border-purple-400/40 group-hover:bg-white/20 dark:group-hover:bg-black/30 transition-all duration-500"></div>
+                <div className="absolute inset-0 bg-white/10 dark:bg-black/20  backdrop-blur-sm rounded-3xl border border-black/30 dark:border-white/20 group-hover:border-purple-400/40 group-hover:bg-white/20 dark:group-hover:bg-black/30 transition-all duration-500"></div>
 
                 {/* Partícula decorativa do card */}
                 <div className="absolute -top-2 -right-2 w-16 h-16 bg-purple-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 animate-pulse transition-opacity duration-500"></div>
@@ -238,7 +238,7 @@ export default function About() {
         </div>
 
         {/* Footer da página */}
-        <div className="mt-16 p-6 bg-white/5 dark:bg-black/20 backdrop-blur-sm rounded-2xl border border-white/20 max-w-2xl">
+        <div className="mt-16 p-6 bg-white/5 dark:bg-black/20 backdrop-blur-sm rounded-2xl border border-black/30 dark:border-white/20 max-w-2xl">
           <p className="text-gray-700 dark:text-gray-300 text-center">
             <span className="text-2xl mb-2 block">🤝</span>
             Quer fazer parte do nosso time ou tem uma ideia incrível?
