@@ -20,6 +20,12 @@ import {
  * =====================
  */
 
+const ALLOWED_GENRES = [
+  "Ação", "Aventura", "RPG", "Estratégia", "Tiro", "Corrida",
+  "Luta", "Plataforma", "Indie", "Simulação", "Esportes",
+  "Mundo Aberto", "Puzzle", "Coop", "Multiplayer", "Terror",
+];
+
 const gemColors = [
   "from-yellow-400 to-orange-500",
   "from-purple-400 to-pink-500",
@@ -187,6 +193,84 @@ function checkAndResetDailyMissions(profileData) {
  * Componente Principal
  * =====================
  */
+function GenresField({ value = [], onChange, max = 8 }) {
+  const [open, setOpen] = React.useState(true); // ou false se quiser começar fechado
+  const [query, setQuery] = React.useState("");
+  const selected = new Set(value);
+
+  const filtered = ALLOWED_GENRES.filter(g =>
+    g.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const toggle = (g) => {
+    const has = selected.has(g);
+    if (!has && selected.size >= max) return;
+    const next = has ? value.filter(v => v !== g) : [...value, g];
+    onChange(Array.from(new Set(next)).slice(0, max));
+  };
+
+  return (
+    <div className="w-full">
+      {/* Cabeçalho */}
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between rounded-xl px-4 py-3 bg-white/5 hover:bg-white/10 border border-purple-800 text-left transition"
+        aria-expanded={open}
+      >
+        <div>
+          <h5 className="text-base md:text-lg font-semibold text-black dark:text-white">
+            Selecione seus gêneros favoritos
+          </h5>
+          <p className="text-xs  text-black dark:text-white/60">
+            {value.length}/{max} selecionados
+          </p>
+        </div>
+        <span className={`ml-4 inline-block transition-transform ${open ? "rotate-180" : ""}`} aria-hidden>
+          ▾
+        </span>
+      </button>
+
+      {open && (
+        <div className="mt-4 space-y-4">
+          {/* Busca */}
+          <div className="relative">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar gênero..."
+              className="w-full rounded-xl  text-black dark:text-black placeholder:text-black dark:placeholder-black px-4 py-2.5 border border-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500/60"
+            />
+            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-purple-700 dark:text-green-600">⌕</div>
+          </div>
+
+          {/* Grade de opções */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+            {filtered.map((g) => {
+              const active = selected.has(g);
+              return (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => toggle(g)}
+                  className={`group w-full text-sm px-3 py-2 rounded-xl border transition
+                    ${active
+                      ? "bg-gradient-to-r bg-white dark:bg-purple-400/30 from-purple-700 dark:from-green-500 to-purple-700 dark:to-green-600 text-white border-transparent shadow-md shadow-purple-900/30"
+                      : " bg-white dark:bg-purple-900/30 text-black border border-purple-600 dark:border-green-600 hover:text-purple-700 dark:hover:text-green-500 "}`}
+                  aria-pressed={active}
+                >
+                  <span className="font-medium">{g}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 const UserProfilePage = () => {
   const [mounted, setMounted] = React.useState(false);
   const [profileData, setProfileData] = React.useState(null);
@@ -770,45 +854,23 @@ const UserProfilePage = () => {
                       Nenhum gênero adicionado ainda. Comece adicionando os que você mais curte!
                     </p>
                   )}
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={tempProfileData.newGenre || ""}
-                      onChange={(e) =>
-                        setTempProfileData((prev) => ({ ...prev, newGenre: e.target.value }))
+                  <div className="flex items-center gap-3">
+                    <GenresField
+                      value={profileData.favoriteGenres || []}
+                      onChange={(next) =>
+                        setProfileData((prev) => ({ ...prev, favoriteGenres: next }))
                       }
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && tempProfileData.newGenre?.trim()) {
-                          setProfileData((prev) => ({
-                            ...prev,
-                            favoriteGenres: [
-                              ...(prev.favoriteGenres || []),
-                              tempProfileData.newGenre.trim(),
-                            ].slice(0, 8),
-                          }));
-                          setTempProfileData((prev) => ({ ...prev, newGenre: "" }));
-                        }
-                      }}
-                      className="w-64 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-black dark:text-white"
-                      placeholder="Ex.: RPG, Aventura…"
+                      max={8}
                     />
-                    <button
-                      onClick={() => {
-                        if (tempProfileData.newGenre?.trim()) {
-                          setProfileData((prev) => ({
-                            ...prev,
-                            favoriteGenres: [
-                              ...(prev.favoriteGenres || []),
-                              tempProfileData.newGenre.trim(),
-                            ].slice(0, 8),
-                          }));
-                          setTempProfileData((prev) => ({ ...prev, newGenre: "" }));
-                        }
-                      }}
-                      className="bg-purple-600 dark:bg-green-500 hover:bg-purple-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-400 dark:hover:shadow-green-400"
-                    >
-                      Adicionar
-                    </button>
+                    {!!(profileData.favoriteGenres?.length) && (
+                      <button
+                        onClick={() => setProfileData(prev => ({ ...prev, favoriteGenres: [] }))}
+                        className="border border-purple-800 dark:border-green-600 text-black dark:text-white px-4 py-2 rounded-lg "
+                        title="Limpar seleção"
+                      >
+                        Limpar
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
