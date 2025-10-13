@@ -11,8 +11,7 @@ import {
 } from "lucide-react";
 
 const RECAPTCHA_SITE_KEY = "6LcEf6orAAAAAJHRrGuwH--ZGIKtMS340oAzjmYg";
-const GOOGLE_CLIENT_ID =
-  "156246719780-7ma9cl5ld9qc2c41sna02162jra5msrj.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = "324836051849-t7b5pb0ei572as0c9kfr37caik9gfja8.apps.googleusercontent.com";
 
 /** se true, ao fazer logout também apaga a conta salva */
 const DELETE_ACCOUNT_ON_LOGOUT = true;
