@@ -396,19 +396,20 @@ export default function SlidePanel({ isOpen, setIsOpen }) {
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md transition-opacity duration-300"
+
         />
       )}
 
       <div
-        className={`fixed inset-0 z-50 flex font-sans transition-transform duration-500 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-0 z-50 flex font-sans transition-transform duration-500 ease-out ${isOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
         <div
-          className="w-0 md:w-1/2 bg-black/30 backdrop-blur-sm"
+          className="hidden md:block md:flex-1"
           onClick={() => setIsOpen(false)}
         />
-        <div className="relative w-full md:w-1/2 bg-white dark:bg-gray-900 h-screen flex flex-col px-6 py-16 shadow-xl overflow-y-auto">
+        <div className="relative w-full md:max-w-[520px] ml-auto h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white shadow-2xl overflow-y-auto">
           <button
             onClick={() => setIsOpen(false)}
             className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
