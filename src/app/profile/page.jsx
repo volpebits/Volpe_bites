@@ -156,6 +156,32 @@ function applyXpGain(profile, gained) {
   return { level, currentXP: cur, maxXP: max, leveled };
 }
 
+//Função para verificar o dia e gerar novas missões
+function checkAndResetDailyMissions(profileData) {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const lastFinish = localStorage.getItem("missionsFinishedTodayDate");
+  const nextMissionsAt = localStorage.getItem("nextMissionsAt");
+
+  if (lastFinish !== todayStr || (nextMissionsAt && todayStr >= nextMissionsAt)) {
+    localStorage.setItem("missionsFinishedToday", "false");
+    localStorage.setItem("missionsFinishedTodayDate", todayStr);
+
+    const need = profileData.maxXP - profileData.currentXP;
+    const newMissions = generateDailyMissionsExactXP(need);
+    localStorage.setItem(STORAGE_KEYS.daily, JSON.stringify(newMissions));
+
+    const tomorrow = new Date();
+    tomorrow.setHours(0, 0, 0, 0);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    localStorage.setItem("nextMissionsAt", tomorrow.toISOString().slice(0, 10));
+
+    return newMissions; // retorna as missões
+  }
+
+  return null; // não é necessário atualizar
+}
+
+
 /**
  * =====================
  * Componente Principal
@@ -299,6 +325,17 @@ const UserProfilePage = () => {
     }
   }, [onboarding, profileData]);
 
+  //Resetar missões para dia seguinte
+  React.useEffect(() => {
+    if (!profileData) return;
+    const newMissions = checkAndResetDailyMissions(profileData);
+    if (newMissions) {
+      setDailyMissions(newMissions);
+      setMissionsFinishedToday(false);
+    }
+  }, [profileData]);
+
+
   /**
    * Handlers
    */
@@ -394,9 +431,42 @@ const UserProfilePage = () => {
     const remaining = dailyMissions.filter((m) => m.id !== missionId);
     setDailyMissions(remaining);
 
+    const completeMission = (missionId) => {
+      if (!profileData) return;
+      const mission = dailyMissions.find((m) => m.id === missionId);
+      if (!mission || mission.completed) return;
+
+      const result = applyXpGain(profileData, mission.xpReward);
+      setProfileData((prev) => ({
+        ...prev,
+        level: result.level,
+        currentXP: result.currentXP,
+        maxXP: result.maxXP,
+        achievementsCount: (prev.achievementsCount ?? 0) + 1,
+      }));
+
+      const completedMission = { ...mission, id: uid(), completedAt: "Agora mesmo", completed: true };
+      setCompletedMissions((prev) => [completedMission, ...prev]);
+
+      const remaining = dailyMissions.filter((m) => m.id !== missionId);
+      setDailyMissions(remaining);
+
+      if (result.leveled || remaining.length === 0) {
+        setDailyMissions([]); // zera missões do dia
+        setMissionsFinishedToday(true);
+        localStorage.setItem("missionsFinishedToday", "true");
+
+        const tomorrow = new Date();
+        tomorrow.setHours(0, 0, 0, 0);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        localStorage.setItem("nextMissionsAt", tomorrow.toISOString().slice(0, 10));
+      }
+    };
+
+
     if (result.leveled || remaining.length === 0) {
       // Zera missões do dia
-      setDailyMissions([]);
+      setDailyMissions([]); // <-- vazio, o React detecta que terminou
       setMissionsFinishedToday(true);
 
       // Armazena no localStorage também
@@ -1186,5 +1256,3 @@ const UserProfilePage = () => {
 };
 
 export default UserProfilePage;
-
-
