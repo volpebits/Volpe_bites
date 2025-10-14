@@ -1,25 +1,13 @@
 "use client";
-
 import React from "react";
+import { useRouter } from "next/navigation";
 import {
-  User,
-  Edit3,
-  Trophy,
-  Gamepad2,
-  Clock,
-  Calendar,
-  X,
-  Loader2,
-  Wand2,
-  RefreshCw,
+  User, Edit3, Trophy, Gamepad2, Clock, Calendar, X, Loader2, Wand2, RefreshCw
 } from "lucide-react";
 
-/**
- * =====================
- * Constantes e utils
- * =====================
- */
-
+/* ==========
+   Constantes
+   ========== */
 const ALLOWED_GENRES = [
   "Ação", "Aventura", "RPG", "Estratégia", "Tiro", "Corrida",
   "Luta", "Plataforma", "Indie", "Simulação", "Esportes",
@@ -53,8 +41,7 @@ const missionTemplates = [
 ];
 
 const uid = () =>
-  globalThis.crypto?.randomUUID?.() ??
-  `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 
 const STORAGE_KEYS = {
   profile: "volpe_profile",
@@ -64,8 +51,11 @@ const STORAGE_KEYS = {
 };
 
 const LEVEL_BASE_XP = 100;
-const xpForLevel = (lvl) => LEVEL_BASE_XP + (lvl - 1) * 20; // curva simples
+const xpForLevel = (lvl) => LEVEL_BASE_XP + (lvl - 1) * 20;
 
+/* ==========
+Utils
+   ========== */
 function resolveDescription(template) {
   let description = template.description;
   if (template.countValues && description.includes("{count}")) {
@@ -194,21 +184,16 @@ function checkAndResetDailyMissions(profileData) {
  * =====================
  */
 function GenresField({ value = [], onChange, max = 8 }) {
-  const [open, setOpen] = React.useState(true); // ou false se quiser começar fechado
+  const [open, setOpen] = React.useState(true);
   const [query, setQuery] = React.useState("");
   const selected = new Set(value);
-
-  const filtered = ALLOWED_GENRES.filter(g =>
-    g.toLowerCase().includes(query.toLowerCase())
-  );
-
+  const filtered = ALLOWED_GENRES.filter(g => g.toLowerCase().includes(query.toLowerCase()));
   const toggle = (g) => {
     const has = selected.has(g);
     if (!has && selected.size >= max) return;
     const next = has ? value.filter(v => v !== g) : [...value, g];
     onChange(Array.from(new Set(next)).slice(0, max));
   };
-
   return (
     <div className="w-full">
       {/* Cabeçalho */}
@@ -222,7 +207,7 @@ function GenresField({ value = [], onChange, max = 8 }) {
           <h5 className="text-base md:text-lg font-semibold text-black dark:text-white">
             Selecione seus gêneros favoritos
           </h5>
-          <p className="text-xs  text-black dark:text-white/60">
+          <p className="text-xs  text-black dark:text-white/50">
             {value.length}/{max} selecionados
           </p>
         </div>
@@ -233,15 +218,7 @@ function GenresField({ value = [], onChange, max = 8 }) {
 
       {open && (
         <div className="mt-4 space-y-4">
-          {/* Busca */}
           <div className="relative">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar gênero..."
-              className="w-full rounded-xl  text-black dark:text-black placeholder:text-black dark:placeholder-black px-4 py-2.5 border border-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-500/60"
-            />
-            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-purple-700 dark:text-green-600">⌕</div>
           </div>
 
           {/* Grade de opções */}
@@ -256,7 +233,7 @@ function GenresField({ value = [], onChange, max = 8 }) {
                   className={`group w-full text-sm px-3 py-2 rounded-xl border transition
                     ${active
                       ? "bg-gradient-to-r bg-white dark:bg-purple-400/30 from-purple-700 dark:from-green-500 to-purple-700 dark:to-green-600 text-white border-transparent shadow-md shadow-purple-900/30"
-                      : " bg-white dark:bg-purple-900/30 text-black border border-purple-600 dark:border-green-600 hover:text-purple-700 dark:hover:text-green-500 "}`}
+                      : " bg-white dark:bg-purple-900/30 text-black dark:text-white border border-purple-600 dark:border-green-600 hover:text-purple-700 dark:hover:text-green-500 "}`}
                   aria-pressed={active}
                 >
                   <span className="font-medium">{g}</span>
@@ -271,7 +248,8 @@ function GenresField({ value = [], onChange, max = 8 }) {
 }
 
 
-const UserProfilePage = () => {
+function UserProfilePage() {
+  const router = useRouter();
   const [mounted, setMounted] = React.useState(false);
   const [profileData, setProfileData] = React.useState(null);
   const [completedMissions, setCompletedMissions] = React.useState([]);
@@ -750,74 +728,78 @@ const UserProfilePage = () => {
             {/* Visão Geral */}
             {activeTab === "overview" && (
               <div className="space-y-6">
-                {/* Objetivo do nível */}
+                {/* Bloco unificado */}
                 <div className="bg-white dark:bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80">
-                  <h4 className="text-black dark:text-white font-semibold mb-3">
-                    Objetivo do nível
-                  </h4>
-                  <p className="text-sm text-black dark:text-white font-semibold mb-2">
-                    Faltam{" "}
-                    <span className="font-bold text-purple-700 dark:text-green-500">
-                      {Math.max(0, profileData.maxXP - profileData.currentXP)} XP
-                    </span>{" "}
-                    para alcançar o nível {profileData.level + 1}.
-                  </p>
-                  <div className="w-full bg-purple-300 dark:bg-green-300 rounded-full h-3 mb-2">
-                    <div
-                      className="bg-purple-500 dark:bg-green-600 h-3 rounded-full"
-                      style={{
-                        width: `${(profileData.currentXP / profileData.maxXP) * 100}%`,
-                      }}
-                    />
+                  {/* Objetivo do nível */}
+                  <div className="pb-6 mb-6 border-b border-purple-900/30 dark:border-purple-700/50">
+                    <h4 className="text-black dark:text-white font-semibold mb-3">
+                      Objetivo do nível
+                    </h4>
+                    <p className="text-sm text-black dark:text-white font-semibold mb-2">
+                      Faltam{" "}
+                      <span className="font-bold text-purple-700 dark:text-green-500">
+                        {Math.max(0, profileData.maxXP - profileData.currentXP)} XP
+                      </span>{" "}
+                      para alcançar o nível {profileData.level + 1}.
+                    </p>
+                    <div className="w-full bg-purple-300 dark:bg-green-300 rounded-full h-3 mb-2">
+                      <div
+                        className="bg-purple-500 dark:bg-green-600 h-3 rounded-full"
+                        style={{
+                          width: `${(profileData.currentXP / profileData.maxXP) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <p className="text-xs text-black dark:text-white font-bold">
+                      {profileData.currentXP}/{profileData.maxXP} XP
+                    </p>
                   </div>
-                  <p className="text-xs text-black dark:text-white font-bold">
-                    {profileData.currentXP}/{profileData.maxXP} XP
-                  </p>
+
+                  {/* Atividade recente */}
+                  <div>
+                    <h4 className="text-black dark:text-white font-semibold mb-3">
+                      Atividade Recente
+                    </h4>
+                    <div className="space-y-3">
+                      {/* Jogos */}
+                      <div>
+                        <p className="text-sm text-purple-700 dark:text-green-400 font-semibold mb-1">Jogos</p>
+                        {profileData.recentGames?.length ? (
+                          <ul className="text-sm text-black dark:text-white list-disc list-inside space-y-1">
+                            {profileData.recentGames.slice(0, 3).map((g, i) => (
+                              <li key={i}>
+                                <span className="font-semibold">{g.name}</span>{" "}
+                                <span className="text-black dark:text-white">— {g.playedAt}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-black dark:text-white">Sem jogos ainda.</p>
+                        )}
+                      </div>
+
+                      {/* Conquistas */}
+                      <div className="pt-2 border-t border-white/10">
+                        <p className="text-sm text-purple-700 dark:text-green-400 font-semibold mb-1">Conquistas</p>
+                        {completedMissions?.length ? (
+                          <ul className="text-sm text-black dark:text-white list-disc list-inside space-y-1">
+                            {completedMissions.slice(0, 3).map((m) => (
+                              <li key={m.id}>
+                                <span className="font-semibold">{m.title}</span>{" "}
+                                <span className="text-black dark:text-white">— +{m.xpReward} XP</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-black dark:text-white">
+                            Ainda sem conquistas. Bora nessas missões!
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Atividade recente */}
-                <div className="bg-white dark:bg-purple-900/30 backdrop-blur-sm rounded-xl p-6 border border-purple-900/80">
-                  <h4 className="text-black dark:text-white font-semibold mb-3">
-                    Atividade Recente
-                  </h4>
-                  <div className="space-y-3">
-                    {/* Jogos */}
-                    <div>
-                      <p className="text-sm text-purple-700 dark:text-green-400 font-semibold mb-1">Jogos</p>
-                      {profileData.recentGames?.length ? (
-                        <ul className="text-sm text-black dark:text-white list-disc list-inside space-y-1">
-                          {profileData.recentGames.slice(0, 3).map((g, i) => (
-                            <li key={i}>
-                              <span className="font-semibold">{g.name}</span>{" "}
-                              <span className="text-black dark:text-white">— {g.playedAt}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-sm text-black dark:text-white">Sem jogos ainda.</p>
-                      )}
-                    </div>
-
-                    {/* Conquistas */}
-                    <div className="pt-2 border-t border-white/10">
-                      <p className="text-sm text-purple-700 dark:text-green-400 font-semibold mb-1">Conquistas</p>
-                      {completedMissions?.length ? (
-                        <ul className="text-sm text-black dark:text-white list-disc list-inside space-y-1">
-                          {completedMissions.slice(0, 3).map((m) => (
-                            <li key={m.id}>
-                              <span className="font-semibold">{m.title}</span>{" "}
-                              <span className="text-black dark:text-white">— +{m.xpReward} XP</span>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <p className="text-sm text-black dark:text-white">
-                          Ainda sem conquistas. Bora nessas missões!
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
 
                 {/* Gêneros favoritos com edição */}
                 <div>
@@ -865,10 +847,7 @@ const UserProfilePage = () => {
                     {!!(profileData.favoriteGenres?.length) && (
                       <button
                         onClick={() => setProfileData(prev => ({ ...prev, favoriteGenres: [] }))}
-                        className="border border-purple-800 dark:border-green-600 text-black dark:text-white px-4 py-2 rounded-lg "
-                        title="Limpar seleção"
                       >
-                        Limpar
                       </button>
                     )}
                   </div>
@@ -1147,13 +1126,13 @@ const UserProfilePage = () => {
                           onClick={() => {
                             completeMission(mission.id);
                           }}
-                          className="transition transform hover:scale-105 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium flex-1"
+                          className="bg-purple-700 dark:bg-purple-600 hover:bg-purple-800 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-400 dark:hover:shadow-purple-600 flex items-center gap-2"
                         >
                           Concluir
                         </button>
                         <button
-                          className="transition transform hover:scale-105 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium"
-                          onClick={() => setActiveTab("games")}
+                          onClick={() => router.push("/games")}
+                          className="bg-green-500 dark:bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-green-300 dark:hover:shadow-green-400 flex items-center gap-2"
                         >
                           Ver Jogos
                         </button>
@@ -1316,5 +1295,4 @@ const UserProfilePage = () => {
     </div >
   );
 };
-
 export default UserProfilePage;
